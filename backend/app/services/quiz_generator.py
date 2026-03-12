@@ -32,32 +32,21 @@ def generate_quiz(title: str, content: str, max_questions: int = 25) -> list[dic
         # Check if the question has A/B/C/D options
         question_stem, options = _parse_multiple_choice(q_text)
 
-        if options:
-            # Multiple choice
-            correct_letter = _extract_correct_letter(answer_text)
-            questions.append({
-                "id": qid,
-                "type": "multiple_choice",
-                "question": question_stem.strip(),
-                "options": options,
-                "correct_answer": correct_letter or "",
-                "keywords": [],
-                "explanation": answer_text.strip(),
-                "source_section": "Questions",
-            })
-        else:
-            # Free response
-            keywords = _extract_keywords(answer_text) if answer_text else []
-            questions.append({
-                "id": qid,
-                "type": "free_response",
-                "question": q_text.strip(),
-                "options": [],
-                "correct_answer": answer_text.strip(),
-                "keywords": keywords,
-                "explanation": answer_text.strip(),
-                "source_section": "Questions",
-            })
+        if not options:
+            # Skip non-multiple-choice questions
+            continue
+
+        correct_letter = _extract_correct_letter(answer_text)
+        questions.append({
+            "id": qid,
+            "type": "multiple_choice",
+            "question": question_stem.strip(),
+            "options": options,
+            "correct_answer": correct_letter or "",
+            "keywords": [],
+            "explanation": answer_text.strip(),
+            "source_section": "Questions",
+        })
 
     return questions
 
@@ -113,41 +102,3 @@ def _parse_numbered_items(text: str) -> list[str]:
     return items
 
 
-def _extract_keywords(answer: str) -> list[str]:
-    """Extract key terms from an answer for keyword-based scoring."""
-    # Remove markdown formatting
-    clean = re.sub(r"\*\*(.+?)\*\*", r"\1", answer)
-    clean = re.sub(r"`(.+?)`", r"\1", clean)
-    clean = re.sub(r"\[(.+?)\]\(.+?\)", r"\1", clean)
-
-    keywords = []
-
-    # Extract backtick terms (SQL commands, code) from original
-    code_terms = re.findall(r"`([^`]+)`", answer)
-    keywords.extend(code_terms)
-
-    # Extract bold terms from original
-    bold_terms = re.findall(r"\*\*([^*]+)\*\*", answer)
-    keywords.extend(bold_terms)
-
-    # Extract ALL_CAPS terms (e.g. SELECT, JOIN, WHERE)
-    caps_terms = re.findall(r"\b([A-Z]{2,}(?:\s+[A-Z]{2,})*)\b", clean)
-    keywords.extend(caps_terms)
-
-    # Extract key technical phrases — words near "is", "means", "refers to"
-    definition_matches = re.findall(
-        r"(\b\w+(?:\s+\w+){0,2})\s+(?:is|are|means|refers to)\b",
-        clean, re.IGNORECASE
-    )
-    keywords.extend(definition_matches)
-
-    # Deduplicate, lowercase, filter short terms
-    seen = set()
-    unique = []
-    for kw in keywords:
-        kw_lower = kw.strip().lower()
-        if len(kw_lower) >= 2 and kw_lower not in seen:
-            seen.add(kw_lower)
-            unique.append(kw_lower)
-
-    return unique
