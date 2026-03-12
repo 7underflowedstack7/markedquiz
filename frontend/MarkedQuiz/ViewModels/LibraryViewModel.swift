@@ -25,21 +25,4 @@ final class LibraryViewModel {
         isLoading = false
     }
 
-    func uploadContent(title: String, content: String) async {
-        do {
-            _ = try await api.uploadDocument(title: title, content: content)
-            await loadDocuments()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    func deleteDocument(id: Int) async {
-        do {
-            try await api.deleteDocument(id: id)
-            documents.removeAll { $0.id == id }
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
 }

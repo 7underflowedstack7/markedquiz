@@ -1,15 +1,9 @@
 import SwiftUI
-import UniformTypeIdentifiers
 
 struct LibraryView: View {
     @State private var viewModel = LibraryViewModel()
-    @State private var showingAddSheet = false
-    @State private var showingFilePicker = false
-    @State private var newTitle = ""
-    @State private var newContent = ""
-    @State private var documentToDelete: DocumentListItem?
-    @State private var showingDeleteConfirmation = false
-    @State private var showErrorBanner = false
+
+@State private var showErrorBanner = false
     @State private var downloadFileURL: URL?
     @State private var showingShareSheet = false
     @State private var downloadingDocumentIDs: Set<Int> = []
@@ -29,9 +23,7 @@ struct LibraryView: View {
                     CRTEmptyView(
                         icon: "doc.text",
                         title: "NO DOCUMENTS",
-                        message: "Upload a markdown file to get started. Import .md files to create quizzes.",
-                        actionTitle: "ADD DOCUMENT",
-                        action: { showingAddSheet = true }
+                        message: "No documents available yet."
                     )
                 } else {
                     documentList
@@ -83,44 +75,14 @@ struct LibraryView: View {
                         .foregroundStyle(CRT.orangeBright)
                         .crtGlow()
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showingAddSheet = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundStyle(CRT.orangeBright)
-                    }
-                    .accessibilityLabel(String(localized: "Add document"))
-                }
             }
             .toolbarBackground(CRT.bgPanel, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .sheet(isPresented: $showingAddSheet) {
-                addDocumentSheet
-            }
-            .confirmationDialog(
-                "Delete Document",
-                isPresented: $showingDeleteConfirmation,
-                presenting: documentToDelete
-            ) { doc in
-                Button("Delete \"\(doc.title)\"", role: .destructive) {
-                    Task {
-                        await viewModel.deleteDocument(id: doc.id)
-                        if let error = viewModel.errorMessage {
-                            withAnimation { showErrorBanner = true }
-                            _ = error
-                        }
-                    }
-                }
-                Button("Cancel", role: .cancel) {}
-            } message: { doc in
-                Text("This will permanently delete \"\(doc.title)\" and cannot be undone.")
-            }
             .task {
                 await viewModel.loadDocuments()
             }
             .onAppear {
-                // Refresh list when returning from detail (e.g., after a delete)
+                // Refresh list when returning from detail
                 if !viewModel.documents.isEmpty {
                     Task { await viewModel.loadDocuments() }
                 }
@@ -131,28 +93,6 @@ struct LibraryView: View {
             .onChange(of: viewModel.errorMessage) { _, newValue in
                 if newValue != nil && !viewModel.documents.isEmpty {
                     withAnimation { showErrorBanner = true }
-                }
-            }
-            .fileImporter(
-                isPresented: $showingFilePicker,
-                allowedContentTypes: [.plainText, UTType(filenameExtension: "md") ?? .plainText],
-                allowsMultipleSelection: true
-            ) { result in
-                switch result {
-                case .success(let urls):
-                    Task {
-                        for url in urls {
-                            guard url.startAccessingSecurityScopedResource() else { continue }
-                            defer { url.stopAccessingSecurityScopedResource() }
-                            if let data = try? Data(contentsOf: url),
-                               let content = String(data: data, encoding: .utf8) {
-                                let title = url.deletingPathExtension().lastPathComponent
-                                await viewModel.uploadContent(title: title, content: content)
-                            }
-                        }
-                    }
-                case .failure:
-                    break
                 }
             }
             .sheet(isPresented: $showingShareSheet, onDismiss: {
@@ -207,10 +147,6 @@ struct LibraryView: View {
                             Task {
                                 await downloadDocument(doc)
                             }
-                        },
-                        onDelete: {
-                            documentToDelete = doc
-                            showingDeleteConfirmation = true
                         }
                     )
                 }
@@ -220,103 +156,12 @@ struct LibraryView: View {
         .background(CRT.bgDeep)
     }
 
-    private var addDocumentSheet: some View {
-        NavigationStack {
-            ZStack {
-                CRT.bgDeep.ignoresSafeArea()
-
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        Text("NEW DOCUMENT")
-                            .font(CRT.monoBold(18))
-                            .foregroundStyle(CRT.orangeBright)
-                            .crtGlow()
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("TITLE")
-                                .font(CRT.monoText(12))
-                                .foregroundStyle(CRT.textDim)
-                            TextField("Document title", text: $newTitle)
-                                .font(CRT.monoText(14))
-                                .foregroundStyle(CRT.orangeGlow)
-                                .padding(12)
-                                .background(CRT.bgPanel)
-                                .clipShape(RoundedRectangle(cornerRadius: 6))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .stroke(CRT.orangeFaint, lineWidth: 1)
-                                )
-                                .accessibilityLabel(String(localized: "Document title"))
-                        }
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("MARKDOWN CONTENT")
-                                .font(CRT.monoText(12))
-                                .foregroundStyle(CRT.textDim)
-
-                            TextEditor(text: $newContent)
-                                .font(CRT.monoText(13))
-                                .foregroundStyle(CRT.orangeGlow)
-                                .scrollContentBackground(.hidden)
-                                .frame(minHeight: 300)
-                                .padding(12)
-                                .background(CRT.bgPanel)
-                                .clipShape(RoundedRectangle(cornerRadius: 6))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .stroke(CRT.orangeFaint, lineWidth: 1)
-                                )
-                                .accessibilityLabel(String(localized: "Markdown content"))
-                        }
-
-                        CRTButton(title: "IMPORT .MD FILE", icon: "folder") {
-                            showingAddSheet = false
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                showingFilePicker = true
-                            }
-                        }
-                        .frame(maxWidth: .infinity)
-
-                    }
-                    .padding(20)
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        showingAddSheet = false
-                    } label: {
-                        Text("Cancel")
-                            .font(CRT.monoText(14))
-                            .foregroundStyle(CRT.orangeDim)
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        Task {
-                            await viewModel.uploadContent(title: newTitle, content: newContent)
-                            newTitle = ""
-                            newContent = ""
-                            showingAddSheet = false
-                        }
-                    } label: {
-                        Text("Create")
-                            .font(CRT.monoBold(14))
-                            .foregroundStyle(CRT.orangeBright)
-                    }
-                    .disabled(newTitle.isEmpty || newContent.isEmpty)
-                }
-            }
-        }
-        .presentationDetents([.large])
-    }
 }
 
 struct DocumentRow: View {
     let document: DocumentListItem
     var isDownloading: Bool = false
     var onDownload: (() -> Void)?
-    var onDelete: (() -> Void)?
 
     var body: some View {
         NavigationLink {
@@ -363,11 +208,6 @@ struct DocumentRow: View {
             }
             .disabled(isDownloading)
 
-            Button(role: .destructive) {
-                onDelete?()
-            } label: {
-                Label("Delete", systemImage: "trash")
-            }
         }
     }
 }

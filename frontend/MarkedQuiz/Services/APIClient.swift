@@ -26,8 +26,6 @@ enum APIError: Error, LocalizedError {
 protocol APIClientProtocol: Sendable {
     func fetchDocuments() async throws -> [DocumentListItem]
     func fetchDocument(id: Int) async throws -> DocumentDetail
-    func uploadDocument(title: String, content: String) async throws -> DocumentDetail
-    func deleteDocument(id: Int) async throws
     func generateQuiz(documentId: Int) async throws -> QuizDetail
     func fetchQuiz(id: Int) async throws -> QuizDetail
     func submitQuiz(quizId: Int, answers: [AnswerSubmission]) async throws -> QuizResult
@@ -56,18 +54,6 @@ final class APIClient: APIClientProtocol, Sendable {
 
     func fetchDocument(id: Int) async throws -> DocumentDetail {
         try await get("/api/documents/\(id)")
-    }
-
-    func uploadDocument(title: String, content: String) async throws -> DocumentDetail {
-        struct Body: Codable {
-            let title: String
-            let content: String
-        }
-        return try await post("/api/documents", body: Body(title: title, content: content))
-    }
-
-    func deleteDocument(id: Int) async throws {
-        let _: [String: String] = try await delete("/api/documents/\(id)")
     }
 
     // MARK: - Quizzes

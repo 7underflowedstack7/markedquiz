@@ -24,15 +24,6 @@ async def list_documents(db: AsyncSession = Depends(get_db)):
     ]
 
 
-@router.post("", response_model=DocumentResponse)
-async def create_document(doc: DocumentCreate, db: AsyncSession = Depends(get_db)):
-    document = Document(title=doc.title, content=doc.content)
-    db.add(document)
-    await db.commit()
-    await db.refresh(document)
-    return document
-
-
 @router.post("/upload", response_model=DocumentResponse)
 async def upload_document(file: UploadFile = File(...), db: AsyncSession = Depends(get_db)):
     if not file.filename or not file.filename.endswith(".md"):
