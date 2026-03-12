@@ -10,10 +10,11 @@ class QuestionOption(BaseModel):
 
 class Question(BaseModel):
     id: str
-    type: str  # "multiple_choice", "true_false", "fill_blank"
+    type: str  # "free_response", "multiple_choice", "true_false", "fill_blank"
     question: str
     options: list[QuestionOption]
     correct_answer: str
+    keywords: list[str] = []
     explanation: str
     source_section: str
 

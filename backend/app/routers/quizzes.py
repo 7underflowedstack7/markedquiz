@@ -20,7 +20,7 @@ async def create_quiz(document_id: int, db: AsyncSession = Depends(get_db)):
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
 
-    questions = generate_quiz(doc.title, doc.content, max_questions=10)
+    questions = generate_quiz(doc.title, doc.content, max_questions=25)
 
     if not questions:
         raise HTTPException(
@@ -71,8 +71,17 @@ async def submit_quiz(quiz_id: int, submission: QuizSubmission, db: AsyncSession
         user_answer = answer_map.get(q["id"], "")
         correct_answer = q["correct_answer"]
 
-        # For fill_blank, do case-insensitive comparison
-        if q["type"] == "fill_blank":
+        # Keyword matching for free_response questions
+        if q["type"] == "free_response":
+            keywords = q.get("keywords", [])
+            if keywords:
+                user_lower = user_answer.strip().lower()
+                matched = sum(1 for kw in keywords if kw.lower() in user_lower)
+                # Correct if user hits at least 40% of keywords
+                is_correct = matched >= max(1, len(keywords) * 0.4)
+            else:
+                is_correct = False
+        elif q["type"] == "fill_blank":
             is_correct = user_answer.strip().lower() == correct_answer.strip().lower()
         else:
             is_correct = user_answer == correct_answer
