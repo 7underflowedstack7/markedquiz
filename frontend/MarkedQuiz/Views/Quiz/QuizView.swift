@@ -67,7 +67,7 @@ struct QuizView: View {
                         .font(CRT.monoBold(11))
                         .foregroundStyle(CRT.textDim)
                     Spacer()
-                    Text("FREE RESPONSE")
+                    Text(question.type == "multiple_choice" ? "MULTIPLE CHOICE" : "FREE RESPONSE")
                         .font(CRT.monoText(11))
                         .foregroundStyle(CRT.cyanAccent)
                 }
@@ -103,8 +103,12 @@ struct QuizView: View {
                     CRTSeparator()
                         .padding(.horizontal, 20)
 
-                    // Free response text input
-                    freeResponseInput
+                    // Answer input based on question type
+                    if question.type == "multiple_choice" {
+                        multipleChoiceOptions(question)
+                    } else {
+                        freeResponseInput
+                    }
                 }
                 .padding(.bottom, 100)
             }
@@ -144,6 +148,46 @@ struct QuizView: View {
                 RoundedRectangle(cornerRadius: 6)
                     .stroke(CRT.orangeFaint, lineWidth: 1)
             )
+        }
+        .padding(.horizontal, 20)
+    }
+
+    private func multipleChoiceOptions(_ question: Question) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            ForEach(question.options) { option in
+                let isSelected = viewModel.userAnswers[question.id] == option.id
+
+                Button {
+                    viewModel.selectAnswer(option.id)
+                } label: {
+                    HStack(alignment: .top, spacing: 12) {
+                        Text(option.id)
+                            .font(CRT.monoBold(14))
+                            .foregroundStyle(isSelected ? CRT.bgDeep : CRT.orangeBright)
+                            .frame(width: 24, height: 24)
+                            .background(isSelected ? CRT.orangeBright : Color.clear)
+                            .clipShape(RoundedRectangle(cornerRadius: 4))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(CRT.orangeBright, lineWidth: 1)
+                            )
+
+                        Text(option.text)
+                            .font(CRT.monoText(14))
+                            .foregroundStyle(isSelected ? CRT.orangeBright : CRT.orangeGlow.opacity(0.8))
+                            .multilineTextAlignment(.leading)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(14)
+                    .background(isSelected ? CRT.orangeBright.opacity(0.1) : CRT.bgPanel)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(isSelected ? CRT.orangeBright : CRT.orangeFaint, lineWidth: 1)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
         }
         .padding(.horizontal, 20)
     }
