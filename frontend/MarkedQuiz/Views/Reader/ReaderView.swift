@@ -165,11 +165,13 @@ struct MarkdownElementView: View {
             .padding(.vertical, 6)
             .background(Color(white: 0.08))
 
-            Text(code)
-                .font(CRT.monoText(fontSize - 1))
-                .foregroundStyle(CRT.greenAccent)
-                .padding(12)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            ScrollView(.horizontal, showsIndicators: false) {
+                Text(code)
+                    .font(CRT.monoText(fontSize - 1))
+                    .foregroundStyle(CRT.greenAccent)
+                    .fixedSize(horizontal: true, vertical: false)
+                    .padding(12)
+            }
         }
         .background(CRT.bgPanel)
         .clipShape(RoundedRectangle(cornerRadius: 6))

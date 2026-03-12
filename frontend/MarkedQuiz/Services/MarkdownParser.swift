@@ -87,6 +87,18 @@ struct MarkdownParser: Sendable {
                 continue
             }
 
+            // Table — lines starting with |
+            if line.trimmingCharacters(in: .whitespaces).hasPrefix("|") {
+                var tableLines: [String] = [line]
+                i += 1
+                while i < lines.count && lines[i].trimmingCharacters(in: .whitespaces).hasPrefix("|") {
+                    tableLines.append(lines[i])
+                    i += 1
+                }
+                elements.append(.codeBlock(language: "table", code: tableLines.joined(separator: "\n")))
+                continue
+            }
+
             // Paragraph — collect consecutive non-empty lines
             var paragraphLines: [String] = [line]
             i += 1
@@ -95,6 +107,8 @@ struct MarkdownParser: Sendable {
                 if nextLine.trimmingCharacters(in: .whitespaces).isEmpty ||
                    nextLine.hasPrefix("#") ||
                    nextLine.hasPrefix("```") ||
+                   nextLine.hasPrefix("**") ||
+                   nextLine.trimmingCharacters(in: .whitespaces).hasPrefix("|") ||
                    nextLine.firstMatch(of: /^\s*[-*+]\s+/) != nil ||
                    nextLine.firstMatch(of: /^\s*\d+\.\s+/) != nil {
                     break
