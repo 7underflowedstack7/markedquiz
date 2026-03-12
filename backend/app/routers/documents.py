@@ -58,6 +58,37 @@ async def get_document(document_id: int, db: AsyncSession = Depends(get_db)):
     return doc
 
 
+@router.put("/{document_id}", response_model=DocumentResponse)
+async def update_document(document_id: int, doc: DocumentCreate, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(Document).where(Document.id == document_id))
+    document = result.scalar_one_or_none()
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+    document.title = doc.title
+    document.content = doc.content
+    await db.commit()
+    await db.refresh(document)
+    return document
+
+
+@router.put("/{document_id}/upload", response_model=DocumentResponse)
+async def update_document_file(document_id: int, file: UploadFile = File(...), db: AsyncSession = Depends(get_db)):
+    if not file.filename or not file.filename.endswith(".md"):
+        raise HTTPException(status_code=400, detail="Only .md files are supported")
+
+    result = await db.execute(select(Document).where(Document.id == document_id))
+    document = result.scalar_one_or_none()
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    content = await file.read()
+    document.title = file.filename.replace(".md", "").replace("-", " ").replace("_", " ").title()
+    document.content = content.decode("utf-8")
+    await db.commit()
+    await db.refresh(document)
+    return document
+
+
 @router.get("/{document_id}/download")
 async def download_document(document_id: int, db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Document).where(Document.id == document_id))
