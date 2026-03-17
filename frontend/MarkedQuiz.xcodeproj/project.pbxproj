@@ -7,30 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BF000001 /* MarkedQuizApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000001; };
-		BF000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000002; };
-		BF000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB000003; };
-		BF000010 /* CRTTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000010; };
-		BF000011 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000011; };
-		BF000012 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000012; };
-		BF000013 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000013; };
-		BF000014 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000014; };
-		BF000015 /* MarkdownParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000015; };
-		BF000016 /* LibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000016; };
-		BF000017 /* ReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000017; };
-		BF000018 /* QuizViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000018; };
-		BF000019 /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000019; };
-		BF000020 /* CRTButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020; };
-		BF000021 /* CRTHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000021; };
-		BF000022 /* CRTLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000022; };
-		BF000023 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000023; };
-		BF000024 /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000024; };
-		BF000025 /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000025; };
-		BF000026 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000026; };
-		BF000027 /* QuizResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000027; };
-		BF000028 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000028; };
-		BF000029 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000029; };
-		BF000030 /* DatabaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000030; };
+		BF000001 /* MarkedQuizApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000001 /* MarkedQuizApp.swift */; };
+		BF000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000002 /* ContentView.swift */; };
+		BF000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB000003 /* Assets.xcassets */; };
+		BF000010 /* CRTTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000010 /* CRTTheme.swift */; };
+		BF000011 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000011 /* Document.swift */; };
+		BF000012 /* Quiz.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000012 /* Quiz.swift */; };
+		BF000013 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000013 /* Stats.swift */; };
+		BF000014 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000014 /* APIClient.swift */; };
+		BF000015 /* MarkdownParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000015 /* MarkdownParser.swift */; };
+		BF000016 /* LibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000016 /* LibraryViewModel.swift */; };
+		BF000017 /* ReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000017 /* ReaderViewModel.swift */; };
+		BF000018 /* QuizViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000018 /* QuizViewModel.swift */; };
+		BF000019 /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000019 /* StatsViewModel.swift */; };
+		BF000020 /* CRTButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000020 /* CRTButton.swift */; };
+		BF000021 /* CRTHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000021 /* CRTHeader.swift */; };
+		BF000022 /* CRTLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000022 /* CRTLoadingView.swift */; };
+		BF000023 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000023 /* LibraryView.swift */; };
+		BF000024 /* DocumentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000024 /* DocumentDetailView.swift */; };
+		BF000025 /* ReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000025 /* ReaderView.swift */; };
+		BF000026 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000026 /* QuizView.swift */; };
+		BF000027 /* QuizResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000027 /* QuizResultsView.swift */; };
+		BF000028 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000028 /* StatsView.swift */; };
+		BF000029 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000029 /* ShareSheetView.swift */; };
+		BF000030 /* DatabaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000030 /* DatabaseView.swift */; };
+		BF000031 /* BootScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB000031 /* BootScreenView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 		AB000028 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		AB000029 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
 		AB000030 /* DatabaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseView.swift; sourceTree = "<group>"; };
+		AB000031 /* BootScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BootScreenView.swift; sourceTree = "<group>"; };
 		CD000001 /* MarkedQuiz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MarkedQuiz.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -153,6 +155,7 @@
 				AB000021 /* CRTHeader.swift */,
 				AB000022 /* CRTLoadingView.swift */,
 				AB000029 /* ShareSheetView.swift */,
+				AB000031 /* BootScreenView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				BF000028 /* StatsView.swift in Sources */,
 				BF000029 /* ShareSheetView.swift in Sources */,
 				BF000030 /* DatabaseView.swift in Sources */,
+				BF000031 /* BootScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,7 +426,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8MFA4CF9KA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -449,7 +453,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 8MFA4CF9KA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
