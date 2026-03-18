@@ -11,6 +11,7 @@ class File(Base):
     filename = Column(String(255), nullable=False)
     extension = Column(String(10), nullable=False, index=True)
     content = Column(Text, default="")
+    folder = Column(String(500), default="", index=True)
     path = Column(String(500), default="")
     size_bytes = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

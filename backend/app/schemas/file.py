@@ -8,6 +8,7 @@ ALLOWED_EXTENSIONS = {"py", "md", "swift", "txt"}
 class FileCreate(BaseModel):
     filename: str
     content: str = ""
+    folder: str = ""
     path: str = ""
 
     @field_validator("filename")
@@ -22,6 +23,7 @@ class FileCreate(BaseModel):
 class FileUpdate(BaseModel):
     filename: str | None = None
     content: str | None = None
+    folder: str | None = None
     path: str | None = None
 
     @field_validator("filename")
@@ -41,6 +43,7 @@ class FileResponse(BaseModel):
     filename: str
     extension: str
     content: str
+    folder: str
     path: str
     size_bytes: int
     created_at: datetime
@@ -53,6 +56,7 @@ class FileListResponse(BaseModel):
     id: int
     filename: str
     extension: str
+    folder: str
     path: str
     size_bytes: int
     created_at: datetime

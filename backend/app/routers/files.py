@@ -13,6 +13,7 @@ router = APIRouter()
 @router.get("", response_model=list[FileListResponse])
 async def list_files(
     extension: str | None = Query(None, description="Filter by extension (py, md, swift, txt)"),
+    folder: str | None = Query(None, description="Filter by folder"),
     path: str | None = Query(None, description="Filter by path prefix"),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
@@ -20,6 +21,8 @@ async def list_files(
     query = select(File).where(File.user_id == current_user.id)
     if extension:
         query = query.where(File.extension == extension.lower().lstrip("."))
+    if folder:
+        query = query.where(File.folder == folder)
     if path:
         query = query.where(File.path.startswith(path))
     query = query.order_by(File.updated_at.desc())
@@ -54,6 +57,7 @@ async def create_file(
         filename=data.filename,
         extension=ext,
         content=data.content,
+        folder=data.folder,
         path=data.path,
         size_bytes=len(data.content.encode("utf-8")),
     )
@@ -82,6 +86,8 @@ async def update_file(
     if data.content is not None:
         file.content = data.content
         file.size_bytes = len(data.content.encode("utf-8"))
+    if data.folder is not None:
+        file.folder = data.folder
     if data.path is not None:
         file.path = data.path
     await db.commit()

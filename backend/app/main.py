@@ -9,9 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.database import init_db
 from app.logging_config import setup_logging
-from app.routers import notes, files
+from app.routers import files
 from app.auth.router import router as auth_router
-from app.models.notes import Note  # noqa: F401
 from app.models.file import File  # noqa: F401
 
 try:
@@ -166,7 +165,6 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 
 app.include_router(auth_router)
-app.include_router(notes.router, prefix="/api/notes", tags=["notes"])
 app.include_router(files.router, prefix="/api/files", tags=["files"])
 
 
@@ -207,6 +205,7 @@ async def drop_table(table_name: str, db: AsyncSession = Depends(get_db)):
         "coffee_item_modifiers", "coffee_customers", "coffee_staff",
         "coffee_orders", "coffee_order_items", "coffee_points_log",
         "coffee_rewards", "coffee_redemptions", "coffee_promotions",
+        "notes",
     }
     if table_name not in allowed:
         return {"error": f"Not allowed to drop '{table_name}'"}
