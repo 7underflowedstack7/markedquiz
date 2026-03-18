@@ -9,9 +9,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.database import init_db
 from app.logging_config import setup_logging
-from app.routers import notes
+from app.routers import notes, files
 from app.auth.router import router as auth_router
-from app.models.notes import Note  # noqa: F401 — ensures table creation on startup
+from app.models.notes import Note  # noqa: F401
+from app.models.file import File  # noqa: F401
 
 try:
     from slowapi import Limiter, _rate_limit_exceeded_handler
@@ -166,6 +167,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 app.include_router(auth_router)
 app.include_router(notes.router, prefix="/api/notes", tags=["notes"])
+app.include_router(files.router, prefix="/api/files", tags=["files"])
 
 
 @app.get("/api/health")
