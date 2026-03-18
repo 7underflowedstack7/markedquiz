@@ -212,3 +212,22 @@ async def drop_table(table_name: str, db: AsyncSession = Depends(get_db)):
     await db.execute(text(f'DROP TABLE IF EXISTS "{table_name}" CASCADE'))
     await db.commit()
     return {"dropped": table_name}
+
+
+@app.post("/api/admin/migrate")
+async def run_migration(db: AsyncSession = Depends(get_db)):
+    """Add missing columns to existing tables."""
+    results = []
+    # Check if folder column exists on files table
+    check = await db.execute(text(
+        "SELECT column_name FROM information_schema.columns "
+        "WHERE table_name = 'files' AND column_name = 'folder'"
+    ))
+    if not check.fetchone():
+        await db.execute(text("ALTER TABLE files ADD COLUMN folder VARCHAR(500) DEFAULT '' NOT NULL"))
+        await db.execute(text("CREATE INDEX ix_files_folder ON files (folder)"))
+        await db.commit()
+        results.append("added folder column to files")
+    else:
+        results.append("folder column already exists")
+    return {"migrations": results}
