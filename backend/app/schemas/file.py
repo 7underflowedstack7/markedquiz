@@ -2,7 +2,7 @@ from pydantic import BaseModel, field_validator
 from datetime import datetime
 
 
-ALLOWED_EXTENSIONS = {"py", "md", "swift", "txt"}
+ALLOWED_EXTENSIONS = {"py", "md", "swift"}
 
 
 class FileCreate(BaseModel):
@@ -16,7 +16,7 @@ class FileCreate(BaseModel):
     def validate_extension(cls, v: str) -> str:
         ext = v.rsplit(".", 1)[-1].lower() if "." in v else ""
         if ext not in ALLOWED_EXTENSIONS:
-            raise ValueError(f"File must be .py, .md, .swift, or .txt")
+            raise ValueError(f"File must be .py, .md, or .swift")
         return v
 
 
@@ -33,7 +33,7 @@ class FileUpdate(BaseModel):
             return v
         ext = v.rsplit(".", 1)[-1].lower() if "." in v else ""
         if ext not in ALLOWED_EXTENSIONS:
-            raise ValueError(f"File must be .py, .md, .swift, or .txt")
+            raise ValueError(f"File must be .py, .md, or .swift")
         return v
 
 

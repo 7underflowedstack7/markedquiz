@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.get("", response_model=list[FileListResponse])
 async def list_files(
-    extension: str | None = Query(None, description="Filter by extension (py, md, swift, txt)"),
+    extension: str | None = Query(None, description="Filter by extension (py, md, swift)"),
     folder: str | None = Query(None, description="Filter by folder"),
     path: str | None = Query(None, description="Filter by path prefix"),
     current_user: User = Depends(get_current_user),
