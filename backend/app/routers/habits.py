@@ -14,6 +14,17 @@ from app.auth.dependencies import get_current_user
 router = APIRouter()
 
 
+def _validate_date_param(value: str, name: str) -> str:
+    try:
+        date.fromisoformat(value)
+    except ValueError:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid date format for '{name}': must be yyyy-MM-dd",
+        )
+    return value
+
+
 # --- Habits CRUD ---
 
 @router.get("", response_model=list[HabitResponse])
@@ -104,6 +115,13 @@ async def list_entries(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
+    if date_filter:
+        _validate_date_param(date_filter, "date")
+    if date_from:
+        _validate_date_param(date_from, "from")
+    if date_to:
+        _validate_date_param(date_to, "to")
+
     query = select(HabitEntry).where(HabitEntry.user_id == current_user.id)
     if date_filter:
         query = query.where(HabitEntry.date == date_filter)

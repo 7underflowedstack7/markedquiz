@@ -12,7 +12,7 @@ class File(Base):
     extension = Column(String(10), nullable=False, index=True)
     content = Column(Text, default="")
     folder = Column(String(500), default="", index=True)
-    path = Column(String(500), default="")
+    path = Column(String(500), default="", index=True)
     size_bytes = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

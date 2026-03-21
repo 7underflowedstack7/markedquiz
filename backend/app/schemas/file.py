@@ -39,7 +39,6 @@ class FileUpdate(BaseModel):
 
 class FileResponse(BaseModel):
     id: int
-    user_id: int
     filename: str
     extension: str
     content: str

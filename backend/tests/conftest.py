@@ -5,29 +5,29 @@ Uses an in-memory SQLite database for speed.
 Each test function gets a fresh database + async client.
 """
 
-import asyncio
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.pool import StaticPool
 
 from app.database import Base, get_db
 from app.main import app
 from app.auth.service import create_access_token, create_refresh_token, hash_password
 from app.auth.models import User
 
-# Use async SQLite for tests (fast, no external DB needed)
-TEST_DATABASE_URL = "sqlite+aiosqlite:///file::memory:?cache=shared&uri=true"
+# Use async SQLite for tests (fast, no external DB needed).
+# StaticPool ensures every checkout returns the same DBAPI connection,
+# so tables created in fixtures are visible inside the API endpoints.
+TEST_DATABASE_URL = "sqlite+aiosqlite://"
 
-engine = create_async_engine(TEST_DATABASE_URL, echo=False)
+engine = create_async_engine(
+    TEST_DATABASE_URL,
+    echo=False,
+    poolclass=StaticPool,
+    connect_args={"check_same_thread": False},
+)
 TestSession = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-
-
-@pytest.fixture(scope="session")
-def event_loop():
-    loop = asyncio.new_event_loop()
-    yield loop
-    loop.close()
 
 
 @pytest_asyncio.fixture

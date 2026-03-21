@@ -1,5 +1,5 @@
 from pydantic import BaseModel, field_validator
-from datetime import datetime
+from datetime import date, datetime
 
 
 ALLOWED_COLORS = {"teal", "ochre", "lichen", "warm", "cool"}
@@ -52,7 +52,6 @@ class HabitUpdate(BaseModel):
 
 class HabitResponse(BaseModel):
     id: int
-    user_id: int
     title: str
     description: str
     icon: str
@@ -70,17 +69,15 @@ class EntryToggle(BaseModel):
     @field_validator("date")
     @classmethod
     def validate_date_format(cls, v: str) -> str:
-        if len(v) != 10 or v[4] != "-" or v[7] != "-":
-            raise ValueError("Date must be in yyyy-MM-dd format")
-        parts = v.split("-")
-        if not all(p.isdigit() for p in parts):
-            raise ValueError("Date must be in yyyy-MM-dd format")
+        try:
+            date.fromisoformat(v)
+        except ValueError:
+            raise ValueError("Date must be a valid date in yyyy-MM-dd format")
         return v
 
 
 class EntryResponse(BaseModel):
     id: int
-    user_id: int
     habit_id: int
     date: str
     completed: bool

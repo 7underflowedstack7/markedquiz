@@ -101,15 +101,6 @@ async def limit_request_size(request: Request, call_next):
                 content={"detail": "Request too large"},
             )
 
-    # Also enforce on the actual body for chunked/missing Content-Length requests
-    if request.method in ("POST", "PUT", "PATCH"):
-        body = await request.body()
-        if len(body) > REQUEST_MAX_SIZE:
-            return JSONResponse(
-                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-                content={"detail": "Request body too large"},
-            )
-
     return await call_next(request)
 
 
@@ -173,63 +164,3 @@ app.include_router(habits.router, prefix="/api/habits", tags=["habits"])
 @app.get("/api/health")
 async def health_check():
     return {"status": "ok", "service": "simple_db"}
-
-
-# --- TEMPORARY ADMIN ENDPOINT — remove after cleanup ---
-from sqlalchemy import text
-from app.database import get_db
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
-
-@app.get("/api/admin/tables")
-async def list_tables(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(text(
-        "SELECT table_name FROM information_schema.tables "
-        "WHERE table_schema = 'public' ORDER BY table_name"
-    ))
-    tables = [row[0] for row in result.fetchall()]
-
-    table_info = {}
-    for table in tables:
-        count = await db.execute(text(f'SELECT COUNT(*) FROM "{table}"'))
-        table_info[table] = count.scalar()
-
-    return {"tables": table_info}
-
-
-@app.delete("/api/admin/tables/{table_name}")
-async def drop_table(table_name: str, db: AsyncSession = Depends(get_db)):
-    # Only allow dropping known deprecated tables
-    allowed = {
-        "documents", "quizzes", "quiz_attempts", "user_stats",
-        "coffee_categories", "coffee_menu_items", "coffee_modifiers",
-        "coffee_item_modifiers", "coffee_customers", "coffee_staff",
-        "coffee_orders", "coffee_order_items", "coffee_points_log",
-        "coffee_rewards", "coffee_redemptions", "coffee_promotions",
-        "notes",
-    }
-    if table_name not in allowed:
-        return {"error": f"Not allowed to drop '{table_name}'"}
-    await db.execute(text(f'DROP TABLE IF EXISTS "{table_name}" CASCADE'))
-    await db.commit()
-    return {"dropped": table_name}
-
-
-@app.post("/api/admin/migrate")
-async def run_migration(db: AsyncSession = Depends(get_db)):
-    """Add missing columns to existing tables."""
-    results = []
-    # Check if folder column exists on files table
-    check = await db.execute(text(
-        "SELECT column_name FROM information_schema.columns "
-        "WHERE table_name = 'files' AND column_name = 'folder'"
-    ))
-    if not check.fetchone():
-        await db.execute(text("ALTER TABLE files ADD COLUMN folder VARCHAR(500) DEFAULT '' NOT NULL"))
-        await db.execute(text("CREATE INDEX ix_files_folder ON files (folder)"))
-        await db.commit()
-        results.append("added folder column to files")
-    else:
-        results.append("folder column already exists")
-    return {"migrations": results}
