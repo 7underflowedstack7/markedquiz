@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from app.database import get_db
 from app.models.file import File
 from app.schemas.file import FileCreate, FileUpdate, FileResponse, FileListResponse
@@ -93,6 +93,34 @@ async def update_file(
     await db.commit()
     await db.refresh(file)
     return file
+
+
+@router.delete("/folder/{folder_name}")
+async def delete_folder(
+    folder_name: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Delete all files in a folder for the current user."""
+    # Count first so we can 404 if folder is empty/nonexistent
+    result = await db.execute(
+        select(File.id).where(
+            File.user_id == current_user.id,
+            File.folder == folder_name,
+        )
+    )
+    file_ids = result.scalars().all()
+    if not file_ids:
+        raise HTTPException(status_code=404, detail="Folder not found or empty")
+
+    await db.execute(
+        delete(File).where(
+            File.user_id == current_user.id,
+            File.folder == folder_name,
+        )
+    )
+    await db.commit()
+    return {"detail": f"Folder deleted", "files_removed": len(file_ids)}
 
 
 @router.delete("/{file_id}")

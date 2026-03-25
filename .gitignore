@@ -5,5 +5,6 @@ data/
 .DS_Store
 xcuserdata/
 DerivedData/
+build/
 .claude/
 docs_res/
