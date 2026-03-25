@@ -1,0 +1,2506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Molten Earth — Theme Iteration 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-base: #1a120e;
+    --bg-deep: #110a07;
+    --blob-rose: #C4582A;
+    --blob-rose-deep: #6B2D0A;
+    --blob-sand: #c6a27a;
+    --blob-sand-deep: #6b5b4d;
+    --card-bg: rgba(255,255,255,0.08);
+    --card-bg-hover: rgba(255,255,255,0.12);
+    --card-border: rgba(255,255,255,0.15);
+    --card-border-hover: rgba(255,255,255,0.22);
+    --card-highlight: rgba(255,255,255,0.12);
+    --card-inset: inset 0 1px 3px rgba(0,0,0,0.15), inset 0 -1px 1px rgba(0,0,0,0.08);
+    --card-inset-top: inset 0 1px 0 var(--card-highlight);
+    --glass-bg: rgba(255,255,255,0.055);
+    --glass-bg-hover: rgba(255,255,255,0.09);
+    --glass-border: rgba(255,255,255,0.12);
+    --glass-border-strong: rgba(255,255,255,0.18);
+    --text-primary: #f5ecdd;
+    --text-secondary: rgba(245,236,221,0.55);
+    --text-tertiary: rgba(245,236,221,0.35);
+    --accent: #C4582A;
+    --accent-soft: rgba(196,88,42,0.3);
+    --sand: #c6a27a;
+    --radius-pill: 30px;
+    --radius-sm: 20px;
+    --blur: 20px;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'DM Sans', system-ui, sans-serif;
+  }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+    overflow-x: hidden;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 42px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .phones-row {
+    display: flex;
+    gap: 36px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ---- iPhone Frame ---- */
+  .iphone-frame {
+    width: 390px;
+    height: 844px;
+    border-radius: 54px;
+    background: var(--bg-base);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.08),
+      0 30px 80px rgba(0,0,0,0.6),
+      0 10px 30px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    flex-shrink: 0;
+  }
+
+  .iphone-frame .notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 126px;
+    height: 34px;
+    background: #000;
+    border-radius: 0 0 22px 22px;
+    z-index: 50;
+  }
+
+  .iphone-frame .status-bar {
+    position: absolute;
+    top: 8px;
+    left: 36px;
+    right: 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 60;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .status-bar .time { margin-left: 4px; }
+  .status-bar .icons { display: flex; gap: 5px; font-size: 12px; }
+
+  /* ---- Blob Layer ---- */
+  .blob-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    will-change: transform;
+    mix-blend-mode: screen;
+  }
+
+  .blob-1 {
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle at 40% 40%, var(--blob-rose) 0%, var(--blob-rose-deep) 60%, transparent 100%);
+    top: 10%;
+    left: -10%;
+    animation: blob1Move 14s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    opacity: 0.75;
+  }
+
+  .blob-2 {
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(circle at 60% 60%, var(--blob-sand) 0%, var(--blob-sand-deep) 55%, transparent 100%);
+    bottom: 15%;
+    right: -5%;
+    animation: blob2Move 18s cubic-bezier(0.35, 0.05, 0.65, 0.95) infinite;
+    opacity: 0.7;
+  }
+
+  @keyframes blob1Move {
+    0%   { transform: translate(0, 0)       scale(1)    rotate(0deg); }
+    15%  { transform: translate(120px, 60px) scale(1.15) rotate(30deg); }
+    30%  { transform: translate(80px, 180px) scale(0.9)  rotate(80deg); }
+    45%  { transform: translate(200px, 120px) scale(1.2) rotate(140deg); }
+    60%  { transform: translate(140px, 280px) scale(0.85) rotate(200deg); }
+    75%  { transform: translate(40px, 200px) scale(1.1)  rotate(280deg); }
+    88%  { transform: translate(-30px, 100px) scale(1.05) rotate(330deg); }
+    100% { transform: translate(0, 0)       scale(1)    rotate(360deg); }
+  }
+
+  @keyframes blob2Move {
+    0%   { transform: translate(0, 0)        scale(1)    rotate(0deg); }
+    12%  { transform: translate(-100px, -80px) scale(1.2) rotate(-40deg); }
+    28%  { transform: translate(-180px, -30px) scale(0.85) rotate(-100deg); }
+    42%  { transform: translate(-60px, -200px) scale(1.15) rotate(-160deg); }
+    55%  { transform: translate(-200px, -160px) scale(0.9) rotate(-220deg); }
+    70%  { transform: translate(-120px, -60px) scale(1.1) rotate(-290deg); }
+    85%  { transform: translate(-40px, -120px) scale(1.05) rotate(-340deg); }
+    100% { transform: translate(0, 0)        scale(1)    rotate(-360deg); }
+  }
+
+  /* ---- Content Layer ---- */
+  .screen-content {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    padding: 60px 20px 30px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    perspective: 800px;
+    perspective-origin: 50% 0%;
+  }
+  .screen-content::-webkit-scrollbar { display: none; }
+
+  /* ---- Dark Matte Card Base ---- */
+  .glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-pill);
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    transform: rotateX(3deg);
+    transform-style: preserve-3d;
+    transform-origin: center top;
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 16px 32px rgba(0,0,0,0.4),
+      0 4px 10px rgba(0,0,0,0.25);
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.4s ease;
+  }
+  .glass-card:hover {
+    background: var(--card-bg-hover);
+    border-color: var(--card-border-hover);
+    transform: rotateX(1deg) translateY(-2px);
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 22px 44px rgba(0,0,0,0.5),
+      0 6px 14px rgba(0,0,0,0.3);
+  }
+
+  .glass-card-sm {
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    box-shadow: var(--card-inset), var(--card-inset-top);
+  }
+
+  .glass-pill {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 100px;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: inline-block;
+    box-shadow: var(--card-inset), var(--card-inset-top);
+  }
+
+  .glass-search {
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: 100px;
+    padding: 14px 22px;
+    width: 100%;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: rotateX(3deg);
+    transform-style: preserve-3d;
+    transform-origin: center top;
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 16px 32px rgba(0,0,0,0.4),
+      0 4px 10px rgba(0,0,0,0.25);
+  }
+  .glass-search .search-icon {
+    color: var(--text-tertiary);
+    font-size: 15px;
+  }
+  .glass-search .search-text {
+    color: var(--text-tertiary);
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  /* ---- View 1: Home/Hub ---- */
+  .greeting {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  .greeting-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    font-weight: 400;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .stat-card {
+    flex: 1;
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-pill);
+    padding: 20px;
+    text-align: center;
+    transform: rotateX(3deg);
+    transform-style: preserve-3d;
+    transform-origin: center top;
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 16px 32px rgba(0,0,0,0.4),
+      0 4px 10px rgba(0,0,0,0.25);
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease;
+  }
+  .stat-number {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+
+  .avatars-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding: 4px 0;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .avatars-row::-webkit-scrollbar { display: none; }
+
+  .avatar-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1.5px solid var(--card-border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--card-inset), var(--card-inset-top), 0 6px 16px rgba(0,0,0,0.3);
+  }
+  .avatar-circle.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 16px var(--accent-soft);
+  }
+
+  .chart-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-pill);
+    padding: 24px;
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    transform: rotateX(3deg);
+    transform-style: preserve-3d;
+    transform-origin: center top;
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 16px 32px rgba(0,0,0,0.4),
+      0 4px 10px rgba(0,0,0,0.25);
+  }
+  .chart-card .chart-title {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 120px;
+    padding: 0 8px;
+  }
+  .chart-bar {
+    flex: 1;
+    border-radius: 8px 8px 4px 4px;
+    transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .chart-bar.rose { background: linear-gradient(to top, var(--blob-rose-deep), var(--blob-rose)); }
+  .chart-bar.sand { background: linear-gradient(to top, var(--blob-sand-deep), var(--blob-sand)); }
+  .chart-bar.muted { background: linear-gradient(to top, rgba(255,255,255,0.05), rgba(255,255,255,0.12)); }
+
+  /* ---- View 2: Notes List ---- */
+  .view-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 18px;
+    letter-spacing: -0.3px;
+  }
+
+  .note-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-pill);
+    padding: 18px 22px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transform: rotateX(3deg);
+    transform-style: preserve-3d;
+    transform-origin: center top;
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 16px 32px rgba(0,0,0,0.4),
+      0 4px 10px rgba(0,0,0,0.25);
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.4s ease;
+  }
+  .note-card:hover {
+    background: var(--card-bg-hover);
+    border-color: var(--card-border-hover);
+    transform: rotateX(1deg) translateY(-2px);
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 22px 44px rgba(0,0,0,0.5),
+      0 6px 14px rgba(0,0,0,0.3);
+  }
+  .note-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .note-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .note-date {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    font-weight: 400;
+  }
+  .note-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.05);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .note-tag.accent {
+    border-color: rgba(196,88,42,0.2);
+    color: var(--accent);
+    background: rgba(196,88,42,0.12);
+  }
+
+  .fab {
+    position: absolute;
+    bottom: 36px;
+    right: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--text-primary);
+    box-shadow: 0 8px 32px rgba(196,88,42,0.35);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 20;
+  }
+  .fab:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 40px rgba(196,88,42,0.5);
+  }
+
+  /* ---- View 3: Profile ---- */
+  .profile-header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-top: 10px;
+  }
+  .profile-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    border: 2px solid var(--card-border);
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--card-inset), var(--card-inset-top), 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .profile-name {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+  .profile-email {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    font-weight: 400;
+  }
+
+  .settings-row {
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: 100px;
+    padding: 16px 22px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transform: rotateX(3deg);
+    transform-style: preserve-3d;
+    transform-origin: center top;
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 16px 32px rgba(0,0,0,0.4),
+      0 4px 10px rgba(0,0,0,0.25);
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.4s ease;
+  }
+  .settings-row:hover {
+    background: var(--card-bg-hover);
+    border-color: var(--card-border-hover);
+    transform: rotateX(1deg) translateY(-2px);
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 22px 44px rgba(0,0,0,0.5),
+      0 6px 14px rgba(0,0,0,0.3);
+  }
+  .settings-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .settings-label {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .settings-chevron {
+    color: var(--text-tertiary);
+    font-size: 14px;
+  }
+
+  .signout-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1.5px solid var(--accent);
+    border-radius: 100px;
+    padding: 14px;
+    width: 100%;
+    margin-top: 20px;
+    transform: rotateX(3deg);
+    transform-style: preserve-3d;
+    transform-origin: center top;
+    box-shadow:
+      var(--card-inset),
+      var(--card-inset-top),
+      0 10px 24px rgba(0,0,0,0.35);
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+  .signout-btn:hover {
+    background: rgba(196,88,42,0.12);
+  }
+
+  /* ---- View Label ---- */
+  .view-label {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ---- Home bottom nav ---- */
+  .bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 82px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 30px 16px;
+    z-index: 20;
+    background: linear-gradient(to top, rgba(26,17,24,0.9) 40%, transparent);
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .nav-item.active { color: var(--accent); }
+  .nav-item .nav-icon { font-size: 20px; }
+
+  /* ---- Noise overlay for texture ---- */
+  .iphone-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    border-radius: 54px;
+    opacity: 0.025;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+  }
+
+  /* ---- Grain animation ---- */
+  .grain-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    border-radius: 54px;
+    pointer-events: none;
+    opacity: 0.03;
+    background: repeating-conic-gradient(rgba(255,255,255,0.08) 0% 25%, transparent 0% 50%) 0 0 / 3px 3px;
+    animation: grainShift 0.4s steps(2) infinite;
+  }
+  @keyframes grainShift {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(-1px, 1px); }
+    100% { transform: translate(1px, -1px); }
+  }
+
+  /* ---- Pulse on blobs ---- */
+  .blob-1::after,
+  .blob-2::after {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    border-radius: 50%;
+    background: inherit;
+    opacity: 0.4;
+    filter: blur(40px);
+    animation: blobPulse 4s ease-in-out infinite alternate;
+  }
+  @keyframes blobPulse {
+    0% { transform: scale(0.9); opacity: 0.3; }
+    100% { transform: scale(1.1); opacity: 0.5; }
+  }
+
+  /* ---- Section titles ---- */
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-tertiary);
+    font-weight: 500;
+    margin-bottom: 12px;
+    padding-left: 4px;
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 1300px) {
+    .phones-row { gap: 24px; }
+  }
+  @media (max-width: 900px) {
+    .phones-row { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Molten Earth</h1>
+<p class="page-subtitle">ITERATION 1 &mdash; LIQUID GLASS THEME CONCEPT</p>
+
+<div class="phones-row">
+
+  <!-- ========== VIEW 1: HOME / HUB ========== -->
+  <div>
+    <div class="iphone-frame">
+      <div class="notch"></div>
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <span class="icons">
+          <span>&#9679;</span>
+          <span>&#9679;</span>
+          <span>&#9679;</span>
+        </span>
+      </div>
+
+      <div class="blob-layer">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+      </div>
+      <div class="grain-overlay"></div>
+
+      <div class="screen-content">
+        <p class="greeting">Good evening,</p>
+        <p class="greeting" style="color: var(--accent); margin-top: -4px;">Alan</p>
+        <p class="greeting-sub">Sunday, March 23</p>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-number" style="color: var(--blob-sand);">12</div>
+            <div class="stat-label">Files</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" style="color: var(--blob-rose);">8</div>
+            <div class="stat-label">Notes</div>
+          </div>
+        </div>
+
+        <div class="section-label">Recent</div>
+        <div class="avatars-row">
+          <div class="avatar-circle active">&#128196;</div>
+          <div class="avatar-circle">&#128221;</div>
+          <div class="avatar-circle">&#128200;</div>
+          <div class="avatar-circle">&#128218;</div>
+          <div class="avatar-circle">&#128736;</div>
+          <div class="avatar-circle">&#127793;</div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-title">Weekly Activity</div>
+          <div class="chart-bars" id="chart1">
+            <!-- JS fills bars -->
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <div class="nav-item active">
+          <span class="nav-icon">&#9679;</span>
+          <span>Home</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">&#9998;</span>
+          <span>Notes</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">&#128194;</span>
+          <span>Files</span>
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon">&#9775;</span>
+          <span>You</span>
+        </div>
+      </div>
+    </div>
+    <div class="view-label">Home / Hub</div>
+  </div>
+
+  <!-- ========== VIEW 2: NOTES LIST ========== -->
+  <div>
+    <div class="iphone-frame">
+      <div class="notch"></div>
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <span class="icons">
+          <span>&#9679;</span>
+          <span>&#9679;</span>
+          <span>&#9679;</span>
+        </span>
+      </div>
+
+      <div class="blob-layer">
+        <div class="blob blob-1" style="animation-delay: -5s;"></div>
+        <div class="blob blob-2" style="animation-delay: -8s;"></div>
+      </div>
+      <div class="grain-overlay"></div>
+
+      <div class="screen-content">
+        <div class="view-title">Notes</div>
+
+        <div class="glass-search">
+          <span class="search-icon">&#8981;</span>
+          <span class="search-text">Search notes...</span>
+        </div>
+
+        <div class="note-card">
+          <div class="note-title">API Integration Notes</div>
+          <div class="note-meta">
+            <span class="note-date">Mar 22, 2026</span>
+            <span class="note-tag accent">backend</span>
+          </div>
+        </div>
+
+        <div class="note-card">
+          <div class="note-title">SwiftUI Layout Patterns</div>
+          <div class="note-meta">
+            <span class="note-date">Mar 20, 2026</span>
+            <span class="note-tag">frontend</span>
+          </div>
+        </div>
+
+        <div class="note-card">
+          <div class="note-title">Database Migration Checklist</div>
+          <div class="note-meta">
+            <span class="note-date">Mar 18, 2026</span>
+            <span class="note-tag accent">devops</span>
+          </div>
+        </div>
+
+        <div class="note-card">
+          <div class="note-title">Color Palette References</div>
+          <div class="note-meta">
+            <span class="note-date">Mar 15, 2026</span>
+            <span class="note-tag">design</span>
+          </div>
+        </div>
+
+        <div class="note-card">
+          <div class="note-title">Authentication Flow v2</div>
+          <div class="note-meta">
+            <span class="note-date">Mar 12, 2026</span>
+            <span class="note-tag">backend</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fab">+</div>
+    </div>
+    <div class="view-label">Notes List</div>
+  </div>
+
+  <!-- ========== VIEW 3: PROFILE / ACCOUNT ========== -->
+  <div>
+    <div class="iphone-frame">
+      <div class="notch"></div>
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <span class="icons">
+          <span>&#9679;</span>
+          <span>&#9679;</span>
+          <span>&#9679;</span>
+        </span>
+      </div>
+
+      <div class="blob-layer">
+        <div class="blob blob-1" style="animation-delay: -3s;"></div>
+        <div class="blob blob-2" style="animation-delay: -11s;"></div>
+      </div>
+      <div class="grain-overlay"></div>
+
+      <div class="screen-content">
+        <div class="profile-header">
+          <div class="profile-avatar">&#128100;</div>
+          <div class="profile-name">Alan</div>
+          <div class="profile-email">alan@example.com</div>
+        </div>
+
+        <div class="section-label">Settings</div>
+
+        <div class="settings-row">
+          <div class="settings-icon">&#128274;</div>
+          <div class="settings-label">Security & Privacy</div>
+          <div class="settings-chevron">&#8250;</div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-icon">&#127912;</div>
+          <div class="settings-label">Appearance</div>
+          <div class="settings-chevron">&#8250;</div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-icon">&#128230;</div>
+          <div class="settings-label">Storage & Data</div>
+          <div class="settings-chevron">&#8250;</div>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-icon">&#128276;</div>
+          <div class="settings-label">Notifications</div>
+          <div class="settings-chevron">&#8250;</div>
+        </div>
+
+        <button class="signout-btn">Sign Out</button>
+      </div>
+    </div>
+    <div class="view-label">Profile / Account</div>
+  </div>
+
+</div>
+
+<!-- ========== COMPONENTS SECTION ========== -->
+<style>
+  /* ── Components Section Layout ── */
+  .components-section {
+    width: 100%;
+    max-width: 1400px;
+    margin-top: 80px;
+    padding: 0 20px;
+  }
+  .components-heading {
+    font-family: var(--font-display);
+    font-size: 38px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .components-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .masonry-grid {
+    columns: 3;
+    column-gap: 28px;
+  }
+  .masonry-grid > * {
+    break-inside: avoid;
+    margin-bottom: 28px;
+    display: inline-block;
+    width: 100%;
+  }
+  @media (max-width: 1100px) {
+    .masonry-grid { columns: 2; }
+  }
+  @media (max-width: 700px) {
+    .masonry-grid { columns: 1; }
+  }
+
+  /* ── C1: Batch A base ── */
+  .c1-card {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25);
+    padding: 24px;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-family: var(--font-body);
+    color: var(--text-primary);
+  }
+  .c1-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .c1-card > * { position: relative; z-index: 1; }
+  .c1-display { font-family: var(--font-display); line-height: 1.1; }
+  .c1-divider { width: 100%; height: 1px; background: rgba(255, 255, 255, 0.08); margin: 16px 0; }
+  .c1-order-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .c1-order-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--text-primary); }
+  .c1-badge { font-size: 11px; font-weight: 500; color: var(--text-secondary); background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 20px; padding: 3px 10px; }
+  .c1-product-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .c1-thumb { width: 44px; height: 44px; border-radius: 10px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.09); flex-shrink: 0; position: relative; overflow: hidden; }
+  .c1-thumb-stool::after { content: ''; position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 18px; height: 18px; background: transparent; border-left: 2.5px solid var(--sand); border-right: 2.5px solid var(--sand); border-bottom: 2.5px solid var(--sand); border-radius: 0 0 4px 4px; }
+  .c1-thumb-stool::before { content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 26px; height: 5px; background: var(--sand); border-radius: 3px; z-index: 2; }
+  .c1-thumb-chair::before { content: ''; position: absolute; bottom: 5px; left: 8px; width: 20px; height: 14px; background: transparent; border-left: 2.5px solid var(--accent); border-right: 2.5px solid var(--accent); border-bottom: 2.5px solid var(--accent); border-radius: 0 0 3px 3px; }
+  .c1-thumb-chair::after { content: ''; position: absolute; top: 8px; right: 8px; width: 4px; height: 19px; background: var(--accent); border-radius: 2px; box-shadow: -16px 0 0 var(--accent), -8px 0 0 2px rgba(196,88,42,0.35); }
+  .c1-product-info { flex: 1; min-width: 0; }
+  .c1-product-name { font-size: 13px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c1-product-sub { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .c1-price-badge { font-family: var(--font-display); font-size: 15px; font-weight: 600; color: var(--sand); background: rgba(198, 162, 122, 0.10); border: 1px solid rgba(198, 162, 122, 0.18); border-radius: 8px; padding: 3px 8px; white-space: nowrap; }
+  .c1-qty { display: flex; align-items: center; gap: 8px; margin-left: 4px; }
+  .c1-qty-btn { width: 22px; height: 22px; border-radius: 6px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.10); color: var(--text-secondary); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; transition: background 0.15s, color 0.15s; font-family: var(--font-body); line-height: 1; }
+  .c1-qty-btn:hover { background: rgba(196, 88, 42, 0.18); color: var(--accent); border-color: rgba(196, 88, 42, 0.30); }
+  .c1-qty-val { font-size: 13px; font-weight: 500; color: var(--text-primary); min-width: 14px; text-align: center; }
+  .c1-order-total { display: flex; align-items: baseline; justify-content: space-between; margin-top: 4px; }
+  .c1-order-total-label { font-size: 12px; color: var(--text-tertiary); letter-spacing: 0.06em; text-transform: uppercase; }
+  .c1-order-total-amount { font-family: var(--font-display); font-size: 28px; font-weight: 600; color: var(--text-primary); }
+  .c1-confirm-btn { margin-top: 18px; width: 100%; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--accent) 0%, var(--sand) 100%); color: var(--bg-deep); font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; text-transform: uppercase; transition: opacity 0.15s; box-shadow: 0 4px 16px rgba(196, 88, 42, 0.35); }
+  .c1-confirm-btn:hover { opacity: 0.88; }
+  .c1-upload-top { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+  .c1-upload-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(196, 88, 42, 0.14); border: 1px solid rgba(196, 88, 42, 0.22); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .c1-upload-text { flex: 1; min-width: 0; }
+  .c1-upload-heading { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+  .c1-upload-filename { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c1-close-btn { width: 28px; height: 28px; border-radius: 8px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.09); color: var(--text-tertiary); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; transition: background 0.15s; }
+  .c1-close-btn:hover { background: rgba(255, 255, 255, 0.09); }
+  .c1-progress-track { width: 100%; height: 5px; border-radius: 99px; background: rgba(255, 255, 255, 0.07); overflow: hidden; position: relative; }
+  .c1-progress-fill { height: 100%; width: 60%; border-radius: 99px; background: linear-gradient(90deg, var(--accent) 0%, var(--sand) 100%); position: relative; overflow: hidden; }
+  .c1-progress-fill::after { content: ''; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent); animation: c1-shimmer 1.8s ease-in-out infinite; border-radius: 99px; }
+  @keyframes c1-shimmer { 0% { left: -60%; } 100% { left: 130%; } }
+  .c1-progress-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+  .c1-progress-size { font-size: 12px; color: var(--text-tertiary); }
+  .c1-progress-pct { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--sand); }
+  .c1-ref-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .c1-ref-label { font-size: 12px; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.07em; }
+  .c1-green-badge { font-size: 11px; font-weight: 600; color: #6ee89a; background: rgba(110, 232, 154, 0.10); border: 1px solid rgba(110, 232, 154, 0.20); border-radius: 20px; padding: 3px 9px; }
+  .c1-ref-amount { font-family: var(--font-display); font-size: 46px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.1; }
+  .c1-ref-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; margin-bottom: 20px; }
+  .c1-chart-wrap { margin: 0 -24px -24px -24px; height: 80px; position: relative; overflow: hidden; border-radius: 0 0 20px 20px; }
+  .c1-chart-wrap svg { width: 100%; height: 100%; display: block; }
+  .c1-dot { fill: var(--sand); stroke: rgba(17, 10, 7, 0.7); stroke-width: 2; }
+
+  /* ── C2: Batch B base ── */
+  .c2-card {
+    position: relative;
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25);
+    overflow: hidden;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .c2-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, transparent 55%); pointer-events: none; z-index: 0; border-radius: 20px; }
+  .c2-event-banner { position: relative; height: 148px; background: radial-gradient(ellipse 120px 90px at 20% 60%, rgba(196, 88, 42, 0.55) 0%, transparent 70%), radial-gradient(ellipse 100px 80px at 70% 30%, rgba(91, 138, 240, 0.5) 0%, transparent 65%), radial-gradient(ellipse 90px 70px at 90% 80%, rgba(224, 112, 80, 0.45) 0%, transparent 60%), radial-gradient(ellipse 80px 60px at 40% 20%, rgba(180, 80, 200, 0.35) 0%, transparent 60%), radial-gradient(ellipse 70px 50px at 55% 70%, rgba(100, 180, 220, 0.35) 0%, transparent 55%), #0d1525; flex-shrink: 0; }
+  .c2-event-live { position: absolute; top: 12px; right: 12px; display: flex; align-items: center; gap: 5px; background: rgba(196, 88, 42, 0.82); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 3px 10px 3px 7px; font-size: 11px; font-weight: 600; color: #fff; letter-spacing: 0.04em; text-transform: uppercase; z-index: 2; }
+  .c2-event-live::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: c2-pulse 1.6s ease-in-out infinite; }
+  @keyframes c2-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .c2-event-body { position: relative; z-index: 1; padding: 18px 20px 20px; }
+  .c2-event-cat { font-size: 11.5px; font-weight: 500; color: var(--sand); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 7px; }
+  .c2-event-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; line-height: 1.2; color: var(--text-primary); margin: 0 0 10px; }
+  .c2-event-desc { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 16px; }
+  .c2-event-footer { display: flex; align-items: center; justify-content: space-between; }
+  .c2-avatars { display: flex; align-items: center; }
+  .c2-avatar { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid rgba(17, 10, 7, 0.8); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; margin-left: -7px; flex-shrink: 0; }
+  .c2-avatars .c2-avatar:first-child { margin-left: 0; }
+  .c2-avatar--a { background: #5b8af0; }
+  .c2-avatar--b { background: #e07050; }
+  .c2-avatar--c { background: #7cc88a; font-size: 13px; }
+  .c2-avatar--more { background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.15); color: var(--text-secondary); font-size: 10px; }
+  .c2-btn-accent { background: var(--accent); border: none; border-radius: 10px; padding: 7px 16px; font-family: var(--font-body); font-size: 12.5px; font-weight: 600; color: #fff; cursor: pointer; transition: background 0.2s, transform 0.15s; box-shadow: 0 2px 10px rgba(196, 88, 42, 0.4); }
+  .c2-btn-accent:hover { transform: translateY(-1px); }
+  .c2-upload-inner { position: relative; z-index: 1; padding: 22px 24px 26px; }
+  .c2-traffic { display: flex; gap: 6px; margin-bottom: 24px; }
+  .c2-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .c2-dot--red { background: #ff5f57; }
+  .c2-dot--yellow { background: #febc2e; }
+  .c2-dot--green { background: #28c840; }
+  .c2-doc-wrap { display: flex; justify-content: center; margin-bottom: 18px; }
+  .c2-doc { position: relative; width: 52px; height: 64px; }
+  .c2-doc-body { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 5px 14px 5px 5px; overflow: hidden; }
+  .c2-doc-body::after { content: ''; position: absolute; top: 0; right: 0; width: 14px; height: 14px; background: rgba(255, 255, 255, 0.04); clip-path: polygon(0 0, 100% 100%, 0 100%); border-left: 1px solid rgba(255, 255, 255, 0.12); border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+  .c2-doc-lines { position: absolute; top: 20px; left: 8px; right: 18px; display: flex; flex-direction: column; gap: 6px; }
+  .c2-doc-line { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.18); }
+  .c2-doc-line:nth-child(2) { width: 75%; }
+  .c2-doc-line:nth-child(3) { width: 55%; }
+  .c2-doc-check { position: absolute; bottom: -6px; right: -8px; width: 26px; height: 26px; border-radius: 50%; background: #2dd4a0; border: 2px solid var(--bg-deep); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(45, 212, 160, 0.45); }
+  .c2-doc-check svg { width: 12px; height: 12px; }
+  .c2-upload-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: #2dd4a0; text-align: center; margin: 0 0 8px; }
+  .c2-upload-sub { font-size: 13px; color: var(--text-secondary); text-align: center; line-height: 1.55; margin: 0 0 18px; }
+  .c2-filename { display: flex; align-items: center; justify-content: center; }
+  .c2-filename-pill { display: inline-flex; align-items: center; gap: 7px; background: rgba(45, 212, 160, 0.07); border: 1px solid rgba(45, 212, 160, 0.2); border-radius: 8px; padding: 6px 14px; font-family: 'DM Mono', 'Courier New', monospace; font-size: 11.5px; color: rgba(45, 212, 160, 0.85); }
+  .c2-filename-pill::before { content: ''; display: block; width: 7px; height: 7px; border-radius: 50%; background: #2dd4a0; opacity: 0.7; }
+  .c2-credit { height: 190px; flex-shrink: 0; }
+  .c2-credit-bg { position: absolute; inset: 0; border-radius: 20px; overflow: hidden; pointer-events: none; }
+  .c2-credit-bg::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 180px 140px at 15% 25%, rgba(220, 50, 40, 0.12) 0%, transparent 70%), radial-gradient(ellipse 160px 120px at 85% 75%, rgba(198, 162, 122, 0.14) 0%, transparent 70%); }
+  .c2-credit-bg::after { content: ''; position: absolute; top: -40%; left: -20%; width: 60%; height: 200%; background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.03) 40%, rgba(255, 255, 255, 0.07) 50%, rgba(255, 255, 255, 0.03) 60%, transparent 70%); transform: skewX(-12deg); }
+  .c2-credit-inner { position: relative; z-index: 1; padding: 18px 22px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; }
+  .c2-credit-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .c2-bank-name { font-family: var(--font-display); font-size: 17px; font-weight: 600; letter-spacing: 0.03em; color: var(--text-primary); }
+  .c2-chip { width: 34px; height: 26px; border-radius: 5px; background: linear-gradient(135deg, #b8962e 0%, #e8d07a 35%, #c9a84c 65%, #9a7620 100%); display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); gap: 1.5px; padding: 3px; box-shadow: 0 1px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.2); }
+  .c2-chip-cell { background: rgba(0, 0, 0, 0.22); border-radius: 1.5px; }
+  .c2-chip-cell:nth-child(2), .c2-chip-cell:nth-child(4), .c2-chip-cell:nth-child(6), .c2-chip-cell:nth-child(8) { background: rgba(0, 0, 0, 0.1); }
+  .c2-card-number { font-family: 'DM Mono', 'Courier New', monospace; font-size: 15px; letter-spacing: 0.2em; color: rgba(245, 236, 221, 0.9); text-align: center; margin: 0; }
+  .c2-credit-bottom { display: flex; align-items: flex-end; justify-content: space-between; }
+  .c2-credit-field { display: flex; flex-direction: column; gap: 2px; }
+  .c2-credit-label { font-size: 9px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); }
+  .c2-credit-value { font-size: 12.5px; font-weight: 500; color: rgba(245, 236, 221, 0.85); letter-spacing: 0.03em; }
+  .c2-mastercard { position: relative; width: 46px; height: 28px; }
+  .c2-mc-circle { position: absolute; width: 28px; height: 28px; border-radius: 50%; }
+  .c2-mc-circle--left { left: 0; background: rgba(220, 50, 40, 0.88); box-shadow: 0 1px 4px rgba(0,0,0,0.35); }
+  .c2-mc-circle--right { right: 0; background: rgba(240, 140, 30, 0.88); box-shadow: 0 1px 4px rgba(0,0,0,0.35); }
+  .c2-mc-overlap { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 14px; height: 22px; background: rgba(234, 110, 28, 0.7); clip-path: ellipse(7px 11px at 50% 50%); }
+
+  /* ── C3: Batch C base ── */
+  .c3-card {
+    position: relative;
+    width: 100%;
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 13px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .c3-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, transparent 55%); border-radius: 20px; pointer-events: none; }
+  .c3-title { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+  .c3-section-label { display: flex; align-items: center; gap: 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: 10px; }
+  .c3-section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, rgba(245, 236, 221, 0.15), transparent); }
+  .c3-divider { height: 1px; background: rgba(255, 255, 255, 0.07); margin: 14px 0; }
+  .c3-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .c3-header-actions { display: flex; gap: 6px; }
+  .c3-icon-btn { width: 30px; height: 30px; border-radius: 50%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.10); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+  .c3-icon-btn svg { width: 13px; height: 13px; stroke: rgba(245, 236, 221, 0.65); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .c3-toggle { width: 36px; height: 20px; border-radius: 10px; background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.10); position: relative; cursor: pointer; flex-shrink: 0; transition: background 0.2s; }
+  .c3-toggle.on { background: rgba(196, 88, 42, 0.55); border-color: rgba(196, 88, 42, 0.4); }
+  .c3-toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35); }
+  .c3-toggle.on::after { transform: translateX(16px); }
+  .c3-segmented { display: flex; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 3px; gap: 3px; }
+  .c3-seg-option { flex: 1; padding: 5px 0; text-align: center; font-size: 11px; border-radius: 7px; cursor: pointer; color: var(--text-tertiary); transition: background 0.2s, color 0.2s; }
+  .c3-seg-option.active { background: rgba(196, 88, 42, 0.35); border: 1px solid rgba(196, 88, 42, 0.4); color: var(--text-primary); }
+  .c3-dot-row { display: flex; gap: 8px; align-items: center; }
+  .c3-color-dot { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: box-shadow 0.2s; }
+  .c3-color-dot.selected { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6); }
+  .c3-option-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+  .c3-option-row-label { flex: 1; font-size: 13px; color: rgba(245, 236, 221, 0.80); }
+  .c3-dropdown-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; cursor: pointer; margin-bottom: 12px; }
+  .c3-dropdown-row span { font-size: 12px; color: rgba(245, 236, 221, 0.65); }
+  .c3-dropdown-row svg { width: 12px; height: 12px; stroke: var(--text-tertiary); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .c3-btn-accent { padding: 7px 16px; background: rgba(196, 88, 42, 0.40); border: 1px solid rgba(196, 88, 42, 0.50); border-radius: 10px; color: var(--text-primary); font-family: var(--font-body); font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .c3-btn-accent svg { width: 12px; height: 12px; stroke: var(--text-primary); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .c3-btn-accent-full { width: 100%; justify-content: center; box-sizing: border-box; }
+  .c3-btn-ghost { padding: 7px 16px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 10px; color: rgba(245, 236, 221, 0.75); font-family: var(--font-body); font-size: 12px; cursor: pointer; }
+  .c3-pill-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .c3-pill { padding: 4px 12px; border-radius: 20px; font-size: 11px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.10); color: var(--text-secondary); cursor: pointer; }
+  .c3-pill.active { background: rgba(196, 88, 42, 0.30); border-color: rgba(196, 88, 42, 0.45); color: var(--text-primary); }
+  .c3-avatar { width: 34px; height: 34px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .c3-textarea { width: 100%; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 10px 12px; color: var(--text-primary); font-family: var(--font-body); font-size: 12px; resize: none; outline: none; min-height: 64px; box-sizing: border-box; }
+  .c3-textarea::placeholder { color: rgba(245, 236, 221, 0.28); font-style: italic; }
+  .c3-notif-dot { width: 8px; height: 8px; border-radius: 50%; background: #e07840; flex-shrink: 0; }
+  .c3-notif-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+  .c3-notif-label { flex: 1; font-size: 13px; color: rgba(245, 236, 221, 0.80); }
+  .c3-video-preview { position: relative; width: 100%; height: 80px; background: rgba(0, 0, 0, 0.45); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.07); overflow: hidden; margin-bottom: 10px; }
+  .c3-video-preview::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 100%, rgba(196, 88, 42, 0.12) 0%, transparent 70%); }
+  .c3-video-corner-btn { position: absolute; top: 8px; right: 8px; z-index: 2; }
+  .c3-video-avatar { position: absolute; bottom: 8px; left: 8px; width: 26px; height: 26px; border-radius: 50%; background: rgba(255, 255, 255, 0.10); border: 1px solid rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; font-size: 13px; z-index: 2; }
+  .c3-custom-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .c3-custom-emoji { width: 26px; height: 26px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .c3-turnaround-row { display: flex; align-items: center; gap: 10px; }
+  .c3-turnaround-text { flex: 1; }
+  .c3-turnaround-text .c3-label { font-size: 12px; color: rgba(245, 236, 221, 0.80); margin-bottom: 2px; }
+  .c3-turnaround-text .c3-sub { font-size: 11px; color: var(--text-tertiary); }
+  .c3-bottom-row { display: flex; align-items: center; gap: 10px; }
+  .c3-bottom-identity { display: flex; align-items: center; gap: 8px; flex: 1; }
+  .c3-bottom-name { font-size: 13px; color: rgba(245, 236, 221, 0.80); }
+
+  /* ── C4: Batch D (Calendar, Members, File Manager) ── */
+  .c4-card {
+    position: relative;
+    width: 100%;
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 13px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .c4-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, transparent 55%); border-radius: 20px; pointer-events: none; }
+  .c4-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .c4-title { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--text-primary); }
+  .c4-header-actions { display: flex; gap: 6px; }
+  .c4-icon-btn { width: 30px; height: 30px; border-radius: 50%; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.10); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+  .c4-icon-btn svg { width: 13px; height: 13px; stroke: rgba(245, 236, 221, 0.65); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .c4-divider { height: 1px; background: rgba(255, 255, 255, 0.07); margin: 14px 0; }
+  .c4-section-label { display: flex; align-items: center; gap: 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: 10px; }
+  .c4-section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, rgba(245, 236, 221, 0.15), transparent); }
+  .c4-tab-row { display: flex; gap: 4px; margin-bottom: 16px; }
+  .c4-tab { padding: 5px 14px; border-radius: 20px; font-size: 11px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-tertiary); cursor: pointer; transition: all 0.2s; }
+  .c4-tab.active { background: rgba(196, 88, 42, 0.30); border-color: rgba(196, 88, 42, 0.45); color: var(--text-primary); }
+  .c4-meeting-item { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+  .c4-meeting-title { font-size: 14px; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
+  .c4-meeting-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .c4-meeting-tag { font-size: 10px; padding: 2px 8px; border-radius: 20px; background: rgba(196, 88, 42, 0.25); border: 1px solid rgba(196, 88, 42, 0.35); color: var(--accent); }
+  .c4-meeting-tag.green { background: rgba(45, 212, 160, 0.12); border-color: rgba(45, 212, 160, 0.25); color: #2dd4a0; }
+  .c4-meeting-time { font-size: 11px; color: var(--text-tertiary); }
+  .c4-speakers { display: flex; align-items: center; gap: 8px; }
+  .c4-speakers-label { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; }
+  .c4-speaker-avatars { display: flex; }
+  .c4-speaker-avatar { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid rgba(17, 10, 7, 0.8); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; margin-left: -5px; }
+  .c4-speaker-avatar:first-child { margin-left: 0; }
+  .c4-today-bar { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(196, 88, 42, 0.12); border: 1px solid rgba(196, 88, 42, 0.25); border-radius: 10px; }
+  .c4-today-icon { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px rgba(196, 88, 42, 0.6); flex-shrink: 0; }
+  .c4-today-text { font-size: 12px; color: var(--text-secondary); flex: 1; }
+  .c4-today-actions { display: flex; gap: 4px; }
+  .c4-btn-accent { padding: 5px 12px; background: rgba(196, 88, 42, 0.40); border: 1px solid rgba(196, 88, 42, 0.50); border-radius: 8px; color: var(--text-primary); font-family: var(--font-body); font-size: 11px; font-weight: 500; cursor: pointer; }
+  .c4-btn-ghost { padding: 5px 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 8px; color: var(--text-secondary); font-family: var(--font-body); font-size: 11px; cursor: pointer; }
+  .c4-member-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+  .c4-member-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; border: 1px solid rgba(255, 255, 255, 0.12); flex-shrink: 0; }
+  .c4-member-info { flex: 1; }
+  .c4-member-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+  .c4-member-role { font-size: 11px; color: var(--text-tertiary); }
+  .c4-member-status { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .c4-member-status.online { background: #2dd4a0; box-shadow: 0 0 6px rgba(45, 212, 160, 0.5); }
+  .c4-member-status.away { background: #febc2e; box-shadow: 0 0 6px rgba(254, 188, 46, 0.4); }
+  .c4-member-status.offline { background: rgba(255, 255, 255, 0.15); }
+  .c4-new-task-btn { width: 100%; padding: 10px; background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 255, 255, 0.15); border-radius: 12px; color: var(--text-secondary); font-family: var(--font-body); font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
+  .c4-new-task-btn:hover { background: rgba(255, 255, 255, 0.08); }
+  .c4-file-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+  .c4-file-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  .c4-file-icon.pdf { background: rgba(220, 50, 40, 0.18); border: 1px solid rgba(220, 50, 40, 0.25); color: #e05545; }
+  .c4-file-icon.fig { background: rgba(162, 89, 255, 0.15); border: 1px solid rgba(162, 89, 255, 0.25); color: #a259ff; }
+  .c4-file-icon.md { background: rgba(91, 138, 240, 0.15); border: 1px solid rgba(91, 138, 240, 0.25); color: #5b8af0; }
+  .c4-file-icon.zip { background: rgba(198, 162, 122, 0.15); border: 1px solid rgba(198, 162, 122, 0.25); color: var(--sand); }
+  .c4-file-info { flex: 1; min-width: 0; }
+  .c4-file-name { font-size: 13px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c4-file-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+  .c4-file-progress { width: 60px; height: 4px; border-radius: 99px; background: rgba(255, 255, 255, 0.07); overflow: hidden; }
+  .c4-file-progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--sand)); }
+  .c4-file-check { color: #2dd4a0; font-size: 14px; }
+  .c4-storage-bar { margin-top: 6px; }
+  .c4-storage-track { width: 100%; height: 6px; border-radius: 99px; background: rgba(255, 255, 255, 0.07); overflow: hidden; margin-bottom: 6px; }
+  .c4-storage-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent) 0%, var(--sand) 60%, #2dd4a0 100%); width: 68%; }
+  .c4-storage-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-tertiary); }
+
+  /* ── C5: File Function Cards (pushed transparency) ── */
+  @keyframes c5-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  @keyframes c5-row-appear { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .c5-card { position: relative; width: 100%; border-radius: 20px; background: var(--card-bg); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); border: 1px solid var(--card-border); box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25); overflow: hidden; box-sizing: border-box; }
+  .c5-card::before { content: ''; position: absolute; inset: 0; border-radius: 20px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, transparent 55%); pointer-events: none; z-index: 0; }
+  .c5-card-inner { position: relative; z-index: 1; padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 16px; }
+  .c5-title { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+  .c5-title--danger { color: rgba(235, 130, 100, 0.92); }
+  .c5-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .c5-divider { height: 1px; background: rgba(255, 255, 255, 0.055); border: none; margin: 0; }
+  .c5-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .c5-icon-btn { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); color: rgba(245, 236, 221, 0.5); cursor: pointer; flex-shrink: 0; transition: background 0.18s; }
+  .c5-icon-btn:hover { background: rgba(255, 255, 255, 0.07); color: rgba(245, 236, 221, 0.8); }
+  .c5-btn-ghost { font-family: var(--font-body); font-size: 0.8rem; font-weight: 500; color: rgba(245, 236, 221, 0.5); background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 10px; padding: 7px 16px; cursor: pointer; transition: background 0.18s; white-space: nowrap; }
+  .c5-btn-ghost:hover { background: rgba(255, 255, 255, 0.06); color: rgba(245, 236, 221, 0.75); }
+  .c5-btn-accent { font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; color: var(--text-primary); background: rgba(196, 88, 42, 0.45); border: 1px solid rgba(196, 88, 42, 0.55); border-radius: 10px; padding: 7px 20px; cursor: pointer; transition: background 0.18s; white-space: nowrap; }
+  .c5-btn-accent:hover { background: rgba(196, 88, 42, 0.62); }
+  .c5-btn-danger { font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; color: rgba(245, 165, 140, 0.95); background: rgba(220, 50, 40, 0.35); border: 1px solid rgba(220, 50, 40, 0.5); border-radius: 10px; padding: 7px 20px; cursor: pointer; transition: background 0.18s; white-space: nowrap; }
+  .c5-btn-danger:hover { background: rgba(220, 50, 40, 0.52); }
+  .c5-type-pills { display: flex; gap: 7px; }
+  .c5-type-pill { font-family: var(--font-body); font-size: 0.775rem; padding: 5px 14px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.07); background: rgba(255, 255, 255, 0.03); color: var(--text-tertiary); cursor: pointer; transition: all 0.18s; }
+  .c5-type-pill--active { background: rgba(196, 88, 42, 0.2); border-color: rgba(196, 88, 42, 0.42); color: var(--sand); }
+  .c5-filename-field { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 10px; padding: 9px 13px; }
+  .c5-filename-placeholder { font-family: var(--font-body); font-size: 0.8125rem; color: rgba(245, 236, 221, 0.28); flex: 1; }
+  .c5-cursor { display: inline-block; width: 1.5px; height: 14px; background: rgba(196, 88, 42, 0.7); border-radius: 1px; animation: c5-blink 1.1s ease-in-out infinite; flex-shrink: 0; }
+  .c5-folder-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 8px 13px; cursor: pointer; transition: background 0.18s; }
+  .c5-folder-row:hover { background: rgba(255, 255, 255, 0.05); }
+  .c5-folder-row-left { display: flex; align-items: center; gap: 8px; }
+  .c5-folder-label { font-family: var(--font-body); font-size: 0.8rem; color: var(--text-tertiary); }
+  .c5-folder-path { font-family: var(--font-body); font-size: 0.8rem; color: rgba(198, 162, 122, 0.8); }
+  .c5-search-bar { display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 10px; padding: 8px 12px; }
+  .c5-search-bar svg { color: rgba(245, 236, 221, 0.28); flex-shrink: 0; }
+  .c5-search-placeholder { font-family: var(--font-body); font-size: 0.8125rem; color: rgba(245, 236, 221, 0.25); flex: 1; }
+  .c5-file-list { display: flex; flex-direction: column; gap: 2px; }
+  .c5-file-row { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; transition: background 0.16s; animation: c5-row-appear 0.3s ease both; }
+  .c5-file-row:nth-child(1) { animation-delay: 0.03s; }
+  .c5-file-row:nth-child(2) { animation-delay: 0.08s; }
+  .c5-file-row:nth-child(3) { animation-delay: 0.13s; }
+  .c5-file-row:hover { background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.06); }
+  .c5-badge { font-family: var(--font-body); font-size: 0.65rem; font-weight: 600; padding: 2px 6px; border-radius: 5px; flex-shrink: 0; text-transform: lowercase; }
+  .c5-badge--py { background: rgba(56, 180, 180, 0.18); color: rgba(100, 210, 210, 0.85); border: 1px solid rgba(56, 180, 180, 0.25); }
+  .c5-badge--md { background: rgba(80, 140, 220, 0.18); color: rgba(120, 170, 240, 0.85); border: 1px solid rgba(80, 140, 220, 0.25); }
+  .c5-badge--swift { background: rgba(220, 120, 60, 0.18); color: rgba(240, 160, 90, 0.85); border: 1px solid rgba(220, 120, 60, 0.25); }
+  .c5-file-name { font-family: var(--font-body); font-size: 0.8125rem; font-weight: 500; color: rgba(245, 236, 221, 0.82); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c5-file-meta { font-family: var(--font-body); font-size: 0.73rem; color: rgba(245, 236, 221, 0.3); white-space: nowrap; flex-shrink: 0; }
+  .c5-tab-pills { display: flex; gap: 6px; }
+  .c5-tab-pill { font-family: var(--font-body); font-size: 0.775rem; padding: 5px 14px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.06); background: transparent; color: rgba(245, 236, 221, 0.38); cursor: pointer; }
+  .c5-tab-pill--active { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: rgba(245, 236, 221, 0.75); }
+  .c5-destruct-row { display: flex; align-items: center; gap: 10px; padding: 11px 13px; border-radius: 11px; background: rgba(220, 50, 40, 0.07); border: 1px solid rgba(220, 50, 40, 0.28); }
+  .c5-red-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(220, 80, 60, 0.9); flex-shrink: 0; box-shadow: 0 0 6px rgba(220, 50, 40, 0.55); }
+  .c5-destruct-name { font-family: var(--font-body); font-size: 0.8125rem; font-weight: 500; color: rgba(245, 190, 175, 0.88); flex: 1; }
+  .c5-destruct-size { font-family: var(--font-body); font-size: 0.73rem; color: rgba(220, 130, 115, 0.55); flex-shrink: 0; }
+  .c5-warning-text { font-family: var(--font-body); font-size: 0.78rem; line-height: 1.55; color: rgba(245, 236, 221, 0.38); }
+  .c5-warning-icon { color: rgba(220, 120, 60, 0.75); display: flex; align-items: center; justify-content: center; }
+
+  /* ── C6: Tool Cards (pushed transparency) ── */
+  .c6-card { position: relative; width: 100%; border-radius: 20px; background: var(--card-bg); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); border: 1px solid var(--card-border); box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25); overflow: hidden; font-family: var(--font-body); color: var(--text-primary); box-sizing: border-box; }
+  .c6-card::before { content: ''; position: absolute; inset: 0; border-radius: 20px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, transparent 55%); pointer-events: none; z-index: 0; }
+  .c6-card > * { position: relative; z-index: 1; }
+  .c6-files-card { padding: 18px 18px 14px; }
+  .c6-files-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .c6-files-header-left { display: flex; align-items: baseline; gap: 10px; }
+  .c6-files-title { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+  .c6-files-badge { font-size: 10px; font-weight: 500; color: var(--text-tertiary); background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 20px; padding: 2px 7px; }
+  .c6-files-icon-btn { width: 28px; height: 28px; border-radius: 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .c6-files-icon-btn svg { opacity: 0.5; }
+  .c6-files-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; }
+  .c6-file-row { display: flex; align-items: center; gap: 9px; padding: 7px 9px; border-radius: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); }
+  .c6-file-type-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+  .c6-dot-py { background: #4ade80; box-shadow: 0 0 4px rgba(74, 222, 128, 0.4); }
+  .c6-dot-md { background: #60a5fa; box-shadow: 0 0 4px rgba(96, 165, 250, 0.4); }
+  .c6-dot-swift { background: #fb923c; box-shadow: 0 0 4px rgba(251, 146, 60, 0.4); }
+  .c6-file-name { flex: 1; font-size: 12px; color: rgba(245, 236, 221, 0.75); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c6-file-size { font-size: 10px; color: rgba(245, 236, 221, 0.32); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  .c6-storage-block { margin-bottom: 14px; }
+  .c6-storage-label { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .c6-storage-text { font-size: 10px; color: var(--text-tertiary); }
+  .c6-storage-track { height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
+  .c6-storage-fill { height: 100%; width: 42.6%; border-radius: 2px; background: linear-gradient(90deg, var(--accent) 0%, var(--sand) 100%); opacity: 0.7; }
+  .c6-ghost-btn { display: block; width: 100%; padding: 7px 0; text-align: center; font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+  .c6-ghost-btn:hover { color: rgba(245, 236, 221, 0.75); background: rgba(255, 255, 255, 0.055); }
+  .c6-habits-card { padding: 18px 18px 14px; }
+  .c6-habits-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .c6-habits-title { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+  .c6-streak-icon { font-size: 18px; filter: drop-shadow(0 0 6px rgba(196, 88, 42, 0.6)); }
+  .c6-streak-block { display: flex; align-items: baseline; gap: 6px; margin-bottom: 16px; }
+  .c6-streak-number { font-family: var(--font-display); font-size: 52px; font-weight: 300; line-height: 1; color: var(--text-primary); }
+  .c6-streak-label { font-size: 11px; color: var(--text-tertiary); padding-bottom: 4px; }
+  .c6-habits-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; }
+  .c6-habit-row { display: flex; align-items: center; gap: 9px; padding: 7px 9px; border-radius: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); }
+  .c6-habit-ring { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .c6-ring-done { background: rgba(74, 222, 128, 0.85); box-shadow: 0 0 5px rgba(74, 222, 128, 0.45); }
+  .c6-ring-pending { background: transparent; border: 1.5px solid rgba(245, 236, 221, 0.25); }
+  .c6-habit-name { flex: 1; font-size: 12px; color: rgba(245, 236, 221, 0.75); }
+  .c6-habit-status-done { font-size: 10px; font-weight: 500; color: rgba(74, 222, 128, 0.7); }
+  .c6-habit-status-pending { font-size: 10px; color: rgba(245, 236, 221, 0.28); }
+  .c6-weekly-block { display: flex; flex-direction: column; gap: 4px; }
+  .c6-weekly-label { font-size: 9px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(245, 236, 221, 0.28); }
+  .c6-weekly-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .c6-day-cell { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .c6-day-label { font-size: 8px; color: rgba(245, 236, 221, 0.25); text-transform: uppercase; }
+  .c6-day-sq { width: 100%; aspect-ratio: 1; border-radius: 3px; border: 1px solid rgba(255, 255, 255, 0.07); }
+  .c6-day-sq.done { background: rgba(196, 88, 42, 0.55); border-color: rgba(196, 88, 42, 0.3); box-shadow: 0 0 4px rgba(196, 88, 42, 0.25); }
+  .c6-day-sq.empty { background: rgba(255, 255, 255, 0.03); }
+  .c6-quizzes-card { padding: 18px 18px 14px; }
+  .c6-quizzes-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .c6-quizzes-title { font-family: var(--font-display); font-size: 22px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+  .c6-quiz-icon { width: 28px; height: 28px; border-radius: 8px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); display: flex; align-items: center; justify-content: center; }
+  .c6-quiz-icon svg { opacity: 0.5; }
+  .c6-stats-row { display: flex; gap: 6px; margin-bottom: 14px; }
+  .c6-stat-pill { font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 20px; }
+  .c6-stat-pill-neutral { color: var(--text-secondary); background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); }
+  .c6-stat-pill-accent { color: rgba(196, 88, 42, 0.85); background: rgba(196, 88, 42, 0.08); border: 1px solid rgba(196, 88, 42, 0.18); }
+  .c6-quiz-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 14px; }
+  .c6-quiz-row { display: flex; align-items: center; gap: 10px; padding: 8px 9px; border-radius: 8px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); }
+  .c6-quiz-ring-wrap { flex-shrink: 0; width: 24px; height: 24px; }
+  .c6-quiz-ring-wrap svg { transform: rotate(-90deg); }
+  .c6-ring-track { fill: none; stroke: rgba(255, 255, 255, 0.07); stroke-width: 2; }
+  .c6-ring-progress-green { fill: none; stroke: rgba(74, 222, 128, 0.75); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 59.69 62.83; }
+  .c6-ring-progress-sand { fill: none; stroke: rgba(198, 162, 122, 0.8); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 55.29 62.83; }
+  .c6-ring-progress-accent { fill: none; stroke: rgba(196, 88, 42, 0.8); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 49.01 62.83; }
+  .c6-quiz-name { flex: 1; font-size: 12px; color: rgba(245, 236, 221, 0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c6-quiz-score { font-size: 11px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--text-secondary); flex-shrink: 0; }
+  .c6-accent-btn { display: block; width: 100%; padding: 8px 0; text-align: center; font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(196, 88, 42, 0.9); background: rgba(196, 88, 42, 0.08); border: 1px solid rgba(196, 88, 42, 0.2); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+  .c6-accent-btn:hover { background: rgba(196, 88, 42, 0.14); color: var(--accent); }
+
+  /* ── C7: Stats, Profile, Activity (pushed transparency) ── */
+  .c7-card { position: relative; width: 100%; background: var(--card-bg); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); border: 1px solid var(--card-border); border-radius: 20px; box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25); overflow: hidden; box-sizing: border-box; }
+  .c7-card::before { content: ''; position: absolute; inset: 0; border-radius: 20px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, transparent 55%); pointer-events: none; z-index: 0; }
+  .c7-card > * { position: relative; z-index: 1; }
+  .c7-accent { color: #C4582A; }
+  .c7-sand { color: #c6a27a; }
+  .c7-green { color: #2dd4a0; }
+  .c7-divider { width: 100%; height: 1px; background: rgba(255, 255, 255, 0.06); margin: 0; border: none; }
+  .c7-btn-ghost { display: inline-block; font-family: var(--font-body); font-size: 12px; font-weight: 500; color: rgba(245, 236, 221, 0.6); background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 7px 18px; cursor: pointer; transition: all 0.2s; text-align: center; }
+  .c7-btn-ghost:hover { background: rgba(255, 255, 255, 0.06); color: var(--text-primary); }
+  .c7-btn-text { display: inline-block; font-family: var(--font-body); font-size: 12px; font-weight: 500; color: var(--accent); background: none; border: none; cursor: pointer; padding: 4px 0; transition: opacity 0.2s; }
+  .c7-btn-text:hover { opacity: 0.75; }
+  .c7-stats-card { padding: 22px 20px 20px; }
+  .c7-stats-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .c7-stats-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--text-primary); line-height: 1; }
+  .c7-stats-icon { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 8px; color: var(--text-tertiary); }
+  .c7-mini-stats-row { display: flex; gap: 10px; margin-bottom: 20px; }
+  .c7-mini-stat-box { flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px; padding: 12px 10px 10px; text-align: center; }
+  .c7-mini-stat-number { font-family: var(--font-display); font-size: 32px; font-weight: 700; line-height: 1; display: block; margin-bottom: 5px; }
+  .c7-mini-stat-label { font-family: var(--font-body); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); display: block; }
+  .c7-activity-label { font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 12px; display: block; }
+  .c7-bar-chart { display: flex; align-items: flex-end; justify-content: space-between; height: 56px; }
+  .c7-bar-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+  .c7-bar { width: 8px; border-radius: 4px 4px 2px 2px; background: linear-gradient(180deg, var(--accent) 0%, var(--sand) 100%); opacity: 0.82; transition: opacity 0.2s; }
+  .c7-bar:hover { opacity: 1; }
+  .c7-bar-day { font-family: var(--font-body); font-size: 9px; color: rgba(245, 236, 221, 0.3); }
+  .c7-profile-card { padding: 28px 22px 22px; }
+  .c7-avatar-wrap { display: flex; justify-content: center; margin-bottom: 14px; }
+  .c7-avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 600; color: var(--sand); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 4px 16px rgba(0, 0, 0, 0.3); }
+  .c7-profile-name { font-family: var(--font-display); font-size: 26px; font-weight: 600; color: var(--text-primary); text-align: center; line-height: 1; margin-bottom: 6px; }
+  .c7-profile-email { font-family: var(--font-body); font-size: 12px; color: var(--text-tertiary); text-align: center; margin-bottom: 18px; }
+  .c7-info-rows { display: flex; flex-direction: column; margin-bottom: 18px; }
+  .c7-info-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+  .c7-info-row:last-child { border-bottom: none; }
+  .c7-info-left { display: flex; align-items: center; gap: 8px; font-family: var(--font-body); font-size: 13px; color: var(--text-secondary); }
+  .c7-info-icon { font-size: 13px; line-height: 1; opacity: 0.7; }
+  .c7-info-value { font-family: var(--font-body); font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
+  .c7-info-value.c7-green { color: #2dd4a0; }
+  .c7-dot-online { width: 6px; height: 6px; border-radius: 50%; background: #2dd4a0; box-shadow: 0 0 6px rgba(45, 212, 160, 0.4); display: inline-block; }
+  .c7-profile-actions { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 4px; }
+  .c7-feed-card { padding: 22px 20px 20px; }
+  .c7-feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .c7-feed-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--text-primary); line-height: 1; }
+  .c7-filter-btn { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 8px; color: var(--text-tertiary); cursor: pointer; transition: background 0.2s; }
+  .c7-filter-btn:hover { background: rgba(255, 255, 255, 0.07); }
+  .c7-feed-list { display: flex; flex-direction: column; margin-bottom: 18px; }
+  .c7-feed-row { display: flex; align-items: center; gap: 11px; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+  .c7-feed-row:last-child { border-bottom: none; }
+  .c7-feed-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .c7-feed-dot--file { background: #C4582A; box-shadow: 0 0 7px rgba(196, 88, 42, 0.35); }
+  .c7-feed-dot--quiz { background: #2dd4a0; box-shadow: 0 0 7px rgba(45, 212, 160, 0.35); }
+  .c7-feed-dot--note { background: #5b9cf6; box-shadow: 0 0 7px rgba(91, 156, 246, 0.35); }
+  .c7-feed-dot--habit { background: #c6a27a; box-shadow: 0 0 7px rgba(198, 162, 122, 0.35); }
+  .c7-feed-dot--deploy { background: #a47fcf; box-shadow: 0 0 7px rgba(164, 127, 207, 0.35); }
+  .c7-feed-body { flex: 1; min-width: 0; }
+  .c7-feed-desc { font-family: var(--font-body); font-size: 13px; color: rgba(245, 236, 221, 0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c7-feed-time { font-family: var(--font-body); font-size: 10px; color: rgba(245, 236, 221, 0.28); flex-shrink: 0; white-space: nowrap; }
+  .c7-feed-footer { display: flex; justify-content: center; }
+</style>
+
+<div class="components-section">
+  <h2 class="components-heading">Components</h2>
+  <p class="components-subtitle">GLASS CARD SYSTEM &mdash; 12 COMPONENT VARIANTS</p>
+
+  <div class="masonry-grid">
+
+    <!-- ══ Card 1: Product Order ══ -->
+    <div class="c1-card">
+      <div class="c1-order-header">
+        <span class="c1-order-title">Your Order</span>
+        <span class="c1-badge">2 items</span>
+      </div>
+      <div class="c1-product-row">
+        <div class="c1-thumb c1-thumb-stool"></div>
+        <div class="c1-product-info">
+          <div class="c1-product-name">Dune Bar Stool</div>
+          <div class="c1-product-sub">Warm oak, natural linen</div>
+        </div>
+        <span class="c1-price-badge">$189</span>
+        <div class="c1-qty" data-id="qty1">
+          <button class="c1-qty-btn c1-qty-minus" type="button">&#8722;</button>
+          <span class="c1-qty-val">1</span>
+          <button class="c1-qty-btn c1-qty-plus" type="button">+</button>
+        </div>
+      </div>
+      <div class="c1-product-row">
+        <div class="c1-thumb c1-thumb-chair"></div>
+        <div class="c1-product-info">
+          <div class="c1-product-name">Ember Lounge Chair</div>
+          <div class="c1-product-sub">Terracotta boucle</div>
+        </div>
+        <span class="c1-price-badge">$340</span>
+        <div class="c1-qty" data-id="qty2">
+          <button class="c1-qty-btn c1-qty-minus" type="button">&#8722;</button>
+          <span class="c1-qty-val">2</span>
+          <button class="c1-qty-btn c1-qty-plus" type="button">+</button>
+        </div>
+      </div>
+      <div class="c1-divider"></div>
+      <div class="c1-order-total">
+        <span class="c1-order-total-label">Order Total</span>
+        <span class="c1-order-total-amount c1-display">$869</span>
+      </div>
+      <button class="c1-confirm-btn" type="button">Confirm Order</button>
+    </div>
+
+    <!-- ══ Card 4: Event ══ -->
+    <div class="c2-card">
+      <div class="c2-event-banner">
+        <span class="c2-event-live">Live</span>
+      </div>
+      <div class="c2-event-body">
+        <p class="c2-event-cat">Design &middot; Workshop</p>
+        <h2 class="c2-event-title">UI/UX Design Summit 2026</h2>
+        <p class="c2-event-desc">Three days of deep-dive sessions, portfolio reviews, and hands-on prototyping with leading product designers.</p>
+        <div class="c2-event-footer">
+          <div class="c2-avatars">
+            <div class="c2-avatar c2-avatar--a">AK</div>
+            <div class="c2-avatar c2-avatar--b">MS</div>
+            <div class="c2-avatar c2-avatar--c">&#128105;</div>
+            <div class="c2-avatar c2-avatar--more">+4</div>
+          </div>
+          <button class="c2-btn-accent">Join Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Card 7: App Settings ══ -->
+    <div class="c3-card">
+      <div class="c3-header">
+        <span class="c3-title">App Settings</span>
+        <div class="c3-header-actions">
+          <div class="c3-icon-btn"><svg viewBox="0 0 16 16"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg></div>
+        </div>
+      </div>
+      <div class="c3-section-label">Color Theme</div>
+      <div class="c3-segmented" style="margin-bottom:14px;">
+        <div class="c3-seg-option">Light</div>
+        <div class="c3-seg-option active">Dark</div>
+      </div>
+      <div class="c3-divider"></div>
+      <div class="c3-section-label">App Icon</div>
+      <div class="c3-dot-row" style="margin-bottom:14px;">
+        <div class="c3-color-dot" style="background:#c0392b;"></div>
+        <div class="c3-color-dot" style="background:#d4a017;"></div>
+        <div class="c3-color-dot selected" style="background:#27ae60;"></div>
+        <div class="c3-color-dot" style="background:#2980b9;"></div>
+        <div class="c3-color-dot" style="background:#8e44ad;"></div>
+      </div>
+      <div class="c3-divider"></div>
+      <div class="c3-custom-header">
+        <div class="c3-section-label" style="margin-bottom:0;flex:1;">Customization</div>
+        <div class="c3-custom-emoji">&#10022;</div>
+      </div>
+      <div class="c3-option-row">
+        <span class="c3-option-row-label">Open Overlay</span>
+        <div class="c3-icon-btn" style="margin-right:6px;"><svg viewBox="0 0 16 16"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg></div>
+        <div class="c3-toggle on"></div>
+      </div>
+      <div class="c3-option-row">
+        <span class="c3-option-row-label">Quick Call</span>
+        <div class="c3-icon-btn" style="margin-right:6px;"><svg viewBox="0 0 16 16"><path d="M3 3.5C3 3.5 4.5 2 6 3.5L7.5 5C7.5 5 8 5.5 7 6.5C6 7.5 7 8.5 8 9.5C9 10.5 10.5 11 11.5 10C12.5 9 13 9.5 13 9.5L14.5 11C16 12.5 14.5 14 14.5 14C13 15.5 4 9 3 3.5Z"/></svg></div>
+        <div class="c3-toggle"></div>
+      </div>
+    </div>
+
+    <!-- ══ Card 10: Upcoming Calendar ══ -->
+    <div class="c4-card">
+      <div class="c4-header">
+        <span class="c4-title">Upcoming</span>
+        <div class="c4-header-actions">
+          <div class="c4-icon-btn"><svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="2"/><line x1="5" y1="1" x2="5" y2="5"/><line x1="11" y1="1" x2="11" y2="5"/><line x1="2" y1="7" x2="14" y2="7"/></svg></div>
+          <div class="c4-icon-btn"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="1.5"/><circle cx="3" cy="8" r="1.5"/><circle cx="13" cy="8" r="1.5"/></svg></div>
+        </div>
+      </div>
+      <div class="c4-tab-row">
+        <div class="c4-tab">Days</div>
+        <div class="c4-tab active">Tasks</div>
+        <div class="c4-tab">Activity</div>
+      </div>
+      <div class="c4-meeting-item">
+        <div class="c4-meeting-title">Investors Meeting</div>
+        <div class="c4-meeting-meta">
+          <span class="c4-meeting-tag">Urgent</span>
+          <span class="c4-meeting-time">2:30 PM &mdash; 4:00 PM</span>
+        </div>
+        <div class="c4-speakers">
+          <span class="c4-speakers-label">Speakers</span>
+          <div class="c4-speaker-avatars">
+            <div class="c4-speaker-avatar" style="background:#5b8af0;">E</div>
+            <div class="c4-speaker-avatar" style="background:#e07050;">J</div>
+          </div>
+        </div>
+      </div>
+      <div class="c4-today-bar">
+        <div class="c4-today-icon"></div>
+        <span class="c4-today-text">Today</span>
+        <div class="c4-today-actions">
+          <button class="c4-btn-ghost">Cancel</button>
+          <button class="c4-btn-accent">Edit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Card 2: Upload Progress ══ -->
+    <div class="c1-card">
+      <div class="c1-upload-top">
+        <div class="c1-upload-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 12V4M9 4L5.5 7.5M9 4L12.5 7.5" stroke="#C4582A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 14.5H15" stroke="#C4582A" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <div class="c1-upload-text">
+          <div class="c1-upload-heading">Uploading</div>
+          <div class="c1-upload-filename">brand_assets_final_v3.zip</div>
+        </div>
+        <div class="c1-close-btn" role="button" aria-label="Cancel upload">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1L9 9M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+      <div class="c1-progress-track"><div class="c1-progress-fill"></div></div>
+      <div class="c1-progress-meta">
+        <span class="c1-progress-size">14.9 Mb / 25 Mb</span>
+        <span class="c1-progress-pct c1-display">60%</span>
+      </div>
+    </div>
+
+    <!-- ══ Card 5: Upload Success ══ -->
+    <div class="c2-card">
+      <div class="c2-upload-inner">
+        <div class="c2-traffic">
+          <div class="c2-dot c2-dot--red"></div>
+          <div class="c2-dot c2-dot--yellow"></div>
+          <div class="c2-dot c2-dot--green"></div>
+        </div>
+        <div class="c2-doc-wrap">
+          <div class="c2-doc">
+            <div class="c2-doc-body">
+              <div class="c2-doc-lines">
+                <div class="c2-doc-line"></div>
+                <div class="c2-doc-line"></div>
+                <div class="c2-doc-line"></div>
+              </div>
+            </div>
+            <div class="c2-doc-check">
+              <svg viewBox="0 0 12 12" fill="none"><path d="M2 6.2L4.8 9 10 3.5" stroke="#0d2b24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <h3 class="c2-upload-title">Uploaded Successfully</h3>
+        <p class="c2-upload-sub">Your file has been securely stored and is ready to access from any device.</p>
+        <div class="c2-filename"><div class="c2-filename-pill">design_system_v3.fig</div></div>
+      </div>
+    </div>
+
+    <!-- ══ Card 8: Chat Settings ══ -->
+    <div class="c3-card">
+      <div class="c3-header">
+        <span class="c3-title">Chat Settings</span>
+        <div class="c3-header-actions">
+          <div class="c3-icon-btn"><svg viewBox="0 0 16 16"><rect x="1" y="4" width="10" height="8" rx="2"/><path d="M11 6.5L15 4.5V11.5L11 9.5"/></svg></div>
+          <div class="c3-icon-btn"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M2.93 2.93l1.41 1.41M11.66 11.66l1.41 1.41M2.93 13.07l1.41-1.41M11.66 4.34l1.41-1.41"/></svg></div>
+        </div>
+      </div>
+      <div class="c3-notif-row">
+        <div class="c3-notif-dot"></div>
+        <span class="c3-notif-label">Notifications</span>
+        <div class="c3-toggle on"></div>
+      </div>
+      <div class="c3-divider"></div>
+      <div class="c3-section-label">Video Call</div>
+      <div class="c3-video-preview">
+        <div class="c3-video-corner-btn">
+          <div class="c3-icon-btn" style="width:24px;height:24px;">
+            <svg viewBox="0 0 16 16" style="width:11px;height:11px;"><circle cx="6" cy="8" r="2.2"/></svg>
+          </div>
+        </div>
+        <div class="c3-video-avatar">&#128100;</div>
+      </div>
+      <div class="c3-dropdown-row">
+        <span>Advanced</span>
+        <svg viewBox="0 0 12 12"><polyline points="4,2 8,6 4,10"/></svg>
+      </div>
+      <button class="c3-btn-accent c3-btn-accent-full">Test Call</button>
+    </div>
+
+    <!-- ══ Card 11: Members List ══ -->
+    <div class="c4-card">
+      <div class="c4-header">
+        <span class="c4-title">Members List</span>
+        <div class="c4-header-actions">
+          <div class="c4-icon-btn"><svg viewBox="0 0 16 16"><path d="M8 2v12M2 8h12"/></svg></div>
+          <div class="c4-icon-btn"><svg viewBox="0 0 16 16"><path d="M1 4h14M1 8h14M1 12h14"/></svg></div>
+        </div>
+      </div>
+      <div class="c4-member-row">
+        <div class="c4-member-avatar" style="background:rgba(91,138,240,0.2);border-color:rgba(91,138,240,0.3);">&#128104;</div>
+        <div class="c4-member-info">
+          <div class="c4-member-name">Andy R.</div>
+          <div class="c4-member-role">Lead Designer</div>
+        </div>
+        <div class="c4-member-status online"></div>
+      </div>
+      <div class="c4-member-row">
+        <div class="c4-member-avatar" style="background:rgba(224,112,80,0.2);border-color:rgba(224,112,80,0.3);">&#128105;</div>
+        <div class="c4-member-info">
+          <div class="c4-member-name">Sara K.</div>
+          <div class="c4-member-role">Frontend Dev</div>
+        </div>
+        <div class="c4-member-status online"></div>
+      </div>
+      <div class="c4-member-row">
+        <div class="c4-member-avatar" style="background:rgba(162,89,255,0.2);border-color:rgba(162,89,255,0.3);">&#129492;</div>
+        <div class="c4-member-info">
+          <div class="c4-member-name">Mike T.</div>
+          <div class="c4-member-role">Backend Dev</div>
+        </div>
+        <div class="c4-member-status away"></div>
+      </div>
+      <div class="c4-member-row">
+        <div class="c4-member-avatar" style="background:rgba(198,162,122,0.2);border-color:rgba(198,162,122,0.3);">&#128103;</div>
+        <div class="c4-member-info">
+          <div class="c4-member-name">Lena P.</div>
+          <div class="c4-member-role">PM</div>
+        </div>
+        <div class="c4-member-status offline"></div>
+      </div>
+      <div class="c4-divider"></div>
+      <button class="c4-new-task-btn">&#10010; New Task</button>
+    </div>
+
+    <!-- ══ Card 3: Referrals Stats ══ -->
+    <div class="c1-card">
+      <div class="c1-ref-top">
+        <span class="c1-ref-label">Referrals</span>
+        <span class="c1-green-badge">+12.4%</span>
+      </div>
+      <div class="c1-ref-amount c1-display">$ 245</div>
+      <div class="c1-ref-sub">Earned this month</div>
+      <div class="c1-chart-wrap">
+        <svg viewBox="0 0 300 80" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="c1-chart-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#C4582A" stop-opacity="0.30"/>
+              <stop offset="100%" stop-color="#C4582A" stop-opacity="0.00"/>
+            </linearGradient>
+            <linearGradient id="c1-chart-stroke" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#C4582A"/>
+              <stop offset="100%" stop-color="#c6a27a"/>
+            </linearGradient>
+          </defs>
+          <path d="M0 60 C30 55, 55 70, 80 48 C105 28, 130 58, 160 38 C190 18, 215 45, 250 28 C275 16, 290 22, 300 18 L300 80 L0 80 Z" fill="url(#c1-chart-fill)"/>
+          <path d="M0 60 C30 55, 55 70, 80 48 C105 28, 130 58, 160 38 C190 18, 215 45, 250 28 C275 16, 290 22, 300 18" fill="none" stroke="url(#c1-chart-stroke)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle class="c1-dot" cx="80" cy="48" r="3.5"/>
+          <circle class="c1-dot" cx="160" cy="38" r="3.5"/>
+          <circle class="c1-dot" cx="250" cy="28" r="3.5"/>
+          <circle class="c1-dot" cx="300" cy="18" r="4" fill="#c6a27a"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ══ Card 6: Credit Card ══ -->
+    <div class="c2-card c2-credit">
+      <div class="c2-credit-bg"></div>
+      <div class="c2-credit-inner">
+        <div class="c2-credit-top">
+          <span class="c2-bank-name">RBL Bank</span>
+          <div class="c2-chip">
+            <div class="c2-chip-cell"></div><div class="c2-chip-cell"></div><div class="c2-chip-cell"></div>
+            <div class="c2-chip-cell"></div><div class="c2-chip-cell"></div><div class="c2-chip-cell"></div>
+            <div class="c2-chip-cell"></div><div class="c2-chip-cell"></div><div class="c2-chip-cell"></div>
+          </div>
+        </div>
+        <p class="c2-card-number">1234&nbsp;&nbsp;5678&nbsp;&nbsp;9012&nbsp;&nbsp;3456</p>
+        <div class="c2-credit-bottom">
+          <div class="c2-credit-field">
+            <span class="c2-credit-label">Card Holder</span>
+            <span class="c2-credit-value">John Doe</span>
+          </div>
+          <div class="c2-credit-field">
+            <span class="c2-credit-label">Expires</span>
+            <span class="c2-credit-value">01/24</span>
+          </div>
+          <div class="c2-mastercard">
+            <div class="c2-mc-circle c2-mc-circle--left"></div>
+            <div class="c2-mc-overlap"></div>
+            <div class="c2-mc-circle c2-mc-circle--right"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Card 9: New Task ══ -->
+    <div class="c3-card">
+      <div class="c3-header">
+        <span class="c3-title">New Task</span>
+        <div class="c3-header-actions">
+          <div class="c3-icon-btn"><svg viewBox="0 0 16 16"><path d="M11 2L14 5L5 14H2V11L11 2Z"/><line x1="9" y1="4" x2="12" y2="7"/></svg></div>
+        </div>
+      </div>
+      <div class="c3-dropdown-row">
+        <span>Advance</span>
+        <svg viewBox="0 0 12 12" style="width:12px;height:12px;stroke:rgba(245,236,221,0.35);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><polyline points="4,2 8,6 4,10"/></svg>
+      </div>
+      <div class="c3-pill-row" style="margin-bottom:12px;">
+        <div class="c3-pill active">Design</div>
+        <div class="c3-pill active">Priority</div>
+      </div>
+      <textarea class="c3-textarea" placeholder="Share your idea..." rows="3"></textarea>
+      <div class="c3-divider"></div>
+      <div class="c3-turnaround-row" style="margin-bottom:14px;">
+        <div class="c3-turnaround-text">
+          <div class="c3-label" style="font-size:12px;color:rgba(245,236,221,0.80);margin-bottom:2px;">Turnaround shift</div>
+          <div class="c3-sub" style="font-size:11px;color:rgba(245,236,221,0.35);">2 days &middot; Standard</div>
+        </div>
+        <button class="c3-btn-ghost">Apply</button>
+      </div>
+      <div class="c3-divider"></div>
+      <div class="c3-bottom-row">
+        <div class="c3-bottom-identity">
+          <div class="c3-avatar">&#129489;</div>
+          <span class="c3-bottom-name">Andy</span>
+        </div>
+        <button class="c3-btn-accent">
+          <svg viewBox="0 0 16 16"><path d="M12 2L8 6M12 2H8M12 2V6"/><path d="M6 4H3C2.45 4 2 4.45 2 5V13C2 13.55 2.45 14 3 14H11C11.55 14 12 13.55 12 13V10"/></svg>
+          Share
+        </button>
+      </div>
+    </div>
+
+    <!-- ══ Card 12: File Upload Manager ══ -->
+    <div class="c4-card">
+      <div class="c4-header">
+        <span class="c4-title">Upload</span>
+        <div class="c4-header-actions">
+          <div class="c4-icon-btn"><svg viewBox="0 0 16 16"><path d="M8 12V4M8 4L4.5 7.5M8 4L11.5 7.5"/></svg></div>
+        </div>
+      </div>
+      <div class="c4-section-label">Completed</div>
+      <div class="c4-file-row">
+        <div class="c4-file-icon fig">FIG</div>
+        <div class="c4-file-info">
+          <div class="c4-file-name">design_system_v3.fig</div>
+          <div class="c4-file-meta">4.2 MB &middot; Complete</div>
+        </div>
+        <span class="c4-file-check">&#10003;</span>
+      </div>
+      <div class="c4-file-row">
+        <div class="c4-file-icon pdf">PDF</div>
+        <div class="c4-file-info">
+          <div class="c4-file-name">brand_guidelines.pdf</div>
+          <div class="c4-file-meta">12.8 MB &middot; Complete</div>
+        </div>
+        <span class="c4-file-check">&#10003;</span>
+      </div>
+      <div class="c4-divider"></div>
+      <div class="c4-section-label">In Progress</div>
+      <div class="c4-file-row">
+        <div class="c4-file-icon md">MD</div>
+        <div class="c4-file-info">
+          <div class="c4-file-name">api_documentation.md</div>
+          <div class="c4-file-meta">1.1 MB &middot; 78%</div>
+        </div>
+        <div class="c4-file-progress"><div class="c4-file-progress-fill" style="width:78%;"></div></div>
+      </div>
+      <div class="c4-file-row">
+        <div class="c4-file-icon zip">ZIP</div>
+        <div class="c4-file-info">
+          <div class="c4-file-name">assets_bundle.zip</div>
+          <div class="c4-file-meta">24.5 MB &middot; 34%</div>
+        </div>
+        <div class="c4-file-progress"><div class="c4-file-progress-fill" style="width:34%;"></div></div>
+      </div>
+      <div class="c4-divider"></div>
+      <div class="c4-storage-bar">
+        <div class="c4-storage-track"><div class="c4-storage-fill"></div></div>
+        <div class="c4-storage-meta">
+          <span>42.6 MB used</span>
+          <span>62.5 MB total</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Card 13: Create File ══ -->
+    <div class="c5-card">
+      <div class="c5-card-inner">
+        <div class="c5-header">
+          <span class="c5-title">New File</span>
+          <button class="c5-icon-btn" aria-label="Close">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><line x1="1" y1="1" x2="11" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="1" x2="1" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="c5-type-pills">
+          <button class="c5-type-pill c5-type-pill--active">.py</button>
+          <button class="c5-type-pill">.md</button>
+          <button class="c5-type-pill">.swift</button>
+        </div>
+        <div class="c5-filename-field">
+          <span class="c5-filename-placeholder">api_endpoints.py</span>
+          <span class="c5-cursor"></span>
+        </div>
+        <div class="c5-folder-row">
+          <div class="c5-folder-row-left">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="color:rgba(198,162,122,0.5);flex-shrink:0;"><path d="M1.5 3.5C1.5 2.95 1.95 2.5 2.5 2.5H5L6 4H10.5C11.05 4 11.5 4.45 11.5 5V9.5C11.5 10.05 11.05 10.5 10.5 10.5H2.5C1.95 10.5 1.5 10.05 1.5 9.5V3.5Z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
+            <span class="c5-folder-label">Location</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="c5-folder-path">backend/routers/</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="color:rgba(245,236,221,0.3);"><path d="M3 3.5L5 5.5L7 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <hr class="c5-divider">
+        <div class="c5-actions">
+          <button class="c5-btn-ghost">Template</button>
+          <button class="c5-btn-accent">Create</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Card 16: Files Tool ══ -->
+    <div class="c6-card c6-files-card">
+      <div class="c6-files-header">
+        <div class="c6-files-header-left">
+          <span class="c6-files-title">Files</span>
+          <span class="c6-files-badge">12 files</span>
+        </div>
+        <button class="c6-files-icon-btn" aria-label="Browse folders">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 3.5C1 2.67 1.67 2 2.5 2H5L6.5 3.5H10.5C11.33 3.5 12 4.17 12 5V9.5C12 10.33 11.33 11 10.5 11H2.5C1.67 11 1 10.33 1 9.5V3.5Z" stroke="#f5ecdd" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="c6-files-list">
+        <div class="c6-file-row"><span class="c6-file-type-dot c6-dot-py"></span><span class="c6-file-name">main.py</span><span class="c6-file-size">4.2 KB</span></div>
+        <div class="c6-file-row"><span class="c6-file-type-dot c6-dot-md"></span><span class="c6-file-name">API_Notes.md</span><span class="c6-file-size">1.8 KB</span></div>
+        <div class="c6-file-row"><span class="c6-file-type-dot c6-dot-swift"></span><span class="c6-file-name">AuthService.swift</span><span class="c6-file-size">6.1 KB</span></div>
+      </div>
+      <div class="c6-storage-block">
+        <div class="c6-storage-label"><span class="c6-storage-text">42.6 MB used</span><span class="c6-storage-text">100 MB</span></div>
+        <div class="c6-storage-track"><div class="c6-storage-fill"></div></div>
+      </div>
+      <button class="c6-ghost-btn">Browse All</button>
+    </div>
+
+    <!-- ══ Card 19: Stats Dashboard ══ -->
+    <div class="c7-card c7-stats-card" style="font-family:'DM Sans',sans-serif;">
+      <div class="c7-stats-header">
+        <span class="c7-stats-title">Overview</span>
+        <div class="c7-stats-icon"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="12" rx="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 7h14" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M5 1v3M11 1v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+      </div>
+      <div class="c7-mini-stats-row">
+        <div class="c7-mini-stat-box"><span class="c7-mini-stat-number c7-sand">12</span><span class="c7-mini-stat-label">Files</span></div>
+        <div class="c7-mini-stat-box"><span class="c7-mini-stat-number c7-accent">8</span><span class="c7-mini-stat-label">Notes</span></div>
+        <div class="c7-mini-stat-box"><span class="c7-mini-stat-number c7-green">14</span><span class="c7-mini-stat-label">Streak</span></div>
+      </div>
+      <span class="c7-activity-label">Weekly Activity</span>
+      <div class="c7-bar-chart">
+        <div class="c7-bar-col"><div class="c7-bar" style="height:28px;"></div><span class="c7-bar-day">M</span></div>
+        <div class="c7-bar-col"><div class="c7-bar" style="height:42px;"></div><span class="c7-bar-day">T</span></div>
+        <div class="c7-bar-col"><div class="c7-bar" style="height:18px;"></div><span class="c7-bar-day">W</span></div>
+        <div class="c7-bar-col"><div class="c7-bar" style="height:36px;"></div><span class="c7-bar-day">T</span></div>
+        <div class="c7-bar-col"><div class="c7-bar" style="height:50px;"></div><span class="c7-bar-day">F</span></div>
+        <div class="c7-bar-col"><div class="c7-bar" style="height:22px;"></div><span class="c7-bar-day">S</span></div>
+        <div class="c7-bar-col"><div class="c7-bar" style="height:14px;"></div><span class="c7-bar-day">S</span></div>
+      </div>
+    </div>
+
+    <!-- ══ Card 14: Open File ══ -->
+    <div class="c5-card">
+      <div class="c5-card-inner">
+        <div class="c5-header">
+          <span class="c5-title">Open File</span>
+          <button class="c5-icon-btn" aria-label="Search">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.3"/><line x1="8.5" y1="8.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="c5-search-bar">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.3"/><line x1="8.5" y1="8.5" x2="11.5" y2="11.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          <span class="c5-search-placeholder">Search files...</span>
+        </div>
+        <div class="c5-file-list">
+          <div class="c5-file-row"><span class="c5-badge c5-badge--py">.py</span><span class="c5-file-name">main.py</span><span class="c5-file-meta">4.2 KB &middot; Mar 22</span></div>
+          <div class="c5-file-row"><span class="c5-badge c5-badge--md">.md</span><span class="c5-file-name">SwiftUI_Patterns.md</span><span class="c5-file-meta">1.8 KB &middot; Mar 20</span></div>
+          <div class="c5-file-row"><span class="c5-badge c5-badge--swift">.swift</span><span class="c5-file-name">AuthService.swift</span><span class="c5-file-meta">6.1 KB &middot; Mar 18</span></div>
+        </div>
+        <hr class="c5-divider">
+        <div class="c5-actions">
+          <div class="c5-tab-pills">
+            <button class="c5-tab-pill c5-tab-pill--active">Recent</button>
+            <button class="c5-tab-pill">All Files</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Card 17: Habits Tool ══ -->
+    <div class="c6-card c6-habits-card">
+      <div class="c6-habits-header">
+        <span class="c6-habits-title">Habits</span>
+        <span class="c6-streak-icon">&#128293;</span>
+      </div>
+      <div class="c6-streak-block">
+        <span class="c6-streak-number">14</span>
+        <span class="c6-streak-label">day streak</span>
+      </div>
+      <div class="c6-habits-list">
+        <div class="c6-habit-row"><span class="c6-habit-ring c6-ring-done"></span><span class="c6-habit-name">Study 30min</span><span class="c6-habit-status-done">Done</span></div>
+        <div class="c6-habit-row"><span class="c6-habit-ring c6-ring-done"></span><span class="c6-habit-name">Review Flashcards</span><span class="c6-habit-status-done">Done</span></div>
+        <div class="c6-habit-row"><span class="c6-habit-ring c6-ring-pending"></span><span class="c6-habit-name">Push to GitHub</span><span class="c6-habit-status-pending">Pending</span></div>
+      </div>
+      <div class="c6-weekly-block">
+        <span class="c6-weekly-label">This week</span>
+        <div class="c6-weekly-grid">
+          <div class="c6-day-cell"><span class="c6-day-label">M</span><div class="c6-day-sq done"></div></div>
+          <div class="c6-day-cell"><span class="c6-day-label">T</span><div class="c6-day-sq done"></div></div>
+          <div class="c6-day-cell"><span class="c6-day-label">W</span><div class="c6-day-sq done"></div></div>
+          <div class="c6-day-cell"><span class="c6-day-label">T</span><div class="c6-day-sq done"></div></div>
+          <div class="c6-day-cell"><span class="c6-day-label">F</span><div class="c6-day-sq done"></div></div>
+          <div class="c6-day-cell"><span class="c6-day-label">S</span><div class="c6-day-sq empty"></div></div>
+          <div class="c6-day-cell"><span class="c6-day-label">S</span><div class="c6-day-sq empty"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Card 20: Profile ══ -->
+    <div class="c7-card c7-profile-card" style="font-family:'DM Sans',sans-serif;">
+      <div class="c7-avatar-wrap"><div class="c7-avatar" style="font-family:'Cormorant Garamond',serif;">A</div></div>
+      <p class="c7-profile-name">Alan</p>
+      <p class="c7-profile-email">alan@markedquiz.com</p>
+      <hr class="c7-divider">
+      <div class="c7-info-rows">
+        <div class="c7-info-row"><span class="c7-info-left"><span class="c7-info-icon">&#128274;</span>Face ID</span><span class="c7-info-value c7-green">Enabled</span></div>
+        <div class="c7-info-row"><span class="c7-info-left"><span class="c7-info-icon">&#128241;</span>Device</span><span class="c7-info-value">iPhone 15 Pro</span></div>
+        <div class="c7-info-row"><span class="c7-info-left"><span class="c7-info-icon">&#9729;&#65039;</span>Sync</span><span class="c7-info-value"><span class="c7-dot-online"></span>Connected</span></div>
+      </div>
+      <div class="c7-profile-actions">
+        <button class="c7-btn-ghost">Edit Profile</button>
+        <button class="c7-btn-text">Sign Out</button>
+      </div>
+    </div>
+
+    <!-- ══ Card 15: Delete File ══ -->
+    <div class="c5-card">
+      <div class="c5-card-inner">
+        <div class="c5-header">
+          <span class="c5-title c5-title--danger">Delete File</span>
+          <div class="c5-warning-icon">
+            <svg width="18" height="17" viewBox="0 0 18 17" fill="none"><path d="M9 1.5L16.5 14.5H1.5L9 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><line x1="9" y1="7" x2="9" y2="10.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="9" cy="12.5" r="0.75" fill="currentColor"/></svg>
+          </div>
+        </div>
+        <div class="c5-destruct-row">
+          <span class="c5-red-dot"></span>
+          <span class="c5-destruct-name">old_migration_v1.py</span>
+          <span class="c5-destruct-size">2.3 KB</span>
+        </div>
+        <p class="c5-warning-text">This action cannot be undone. The file will be permanently removed.</p>
+        <hr class="c5-divider">
+        <div class="c5-actions">
+          <button class="c5-btn-ghost">Cancel</button>
+          <button class="c5-btn-danger">Delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ Card 18: Quizzes Tool ══ -->
+    <div class="c6-card c6-quizzes-card">
+      <div class="c6-quizzes-header">
+        <span class="c6-quizzes-title">Quizzes</span>
+        <div class="c6-quiz-icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="#f5ecdd" stroke-width="1.2"/><path d="M5.5 5.5C5.5 4.67 6.17 4 7 4s1.5.67 1.5 1.5c0 .7-.47 1.28-1.1 1.45L7 7.25V8.5" stroke="#f5ecdd" stroke-width="1.2" stroke-linecap="round"/><circle cx="7" cy="10" r="0.6" fill="#f5ecdd"/></svg></div>
+      </div>
+      <div class="c6-stats-row">
+        <span class="c6-stat-pill c6-stat-pill-neutral">8 completed</span>
+        <span class="c6-stat-pill c6-stat-pill-accent">92% avg</span>
+      </div>
+      <div class="c6-quiz-list">
+        <div class="c6-quiz-row">
+          <div class="c6-quiz-ring-wrap"><svg width="24" height="24" viewBox="0 0 24 24"><circle class="c6-ring-track" cx="12" cy="12" r="10"/><circle class="c6-ring-progress-green" cx="12" cy="12" r="10"/></svg></div>
+          <span class="c6-quiz-name">Database Fundamentals</span><span class="c6-quiz-score">95%</span>
+        </div>
+        <div class="c6-quiz-row">
+          <div class="c6-quiz-ring-wrap"><svg width="24" height="24" viewBox="0 0 24 24"><circle class="c6-ring-track" cx="12" cy="12" r="10"/><circle class="c6-ring-progress-sand" cx="12" cy="12" r="10"/></svg></div>
+          <span class="c6-quiz-name">Swift Concurrency</span><span class="c6-quiz-score">88%</span>
+        </div>
+        <div class="c6-quiz-row">
+          <div class="c6-quiz-ring-wrap"><svg width="24" height="24" viewBox="0 0 24 24"><circle class="c6-ring-track" cx="12" cy="12" r="10"/><circle class="c6-ring-progress-accent" cx="12" cy="12" r="10"/></svg></div>
+          <span class="c6-quiz-name">FastAPI Security</span><span class="c6-quiz-score">78%</span>
+        </div>
+      </div>
+      <button class="c6-accent-btn">Start New Quiz</button>
+    </div>
+
+    <!-- ══ Card 21: Activity Feed ══ -->
+    <div class="c7-card c7-feed-card" style="font-family:'DM Sans',sans-serif;">
+      <div class="c7-feed-header">
+        <span class="c7-feed-title" style="font-family:'Cormorant Garamond',serif;">Recent Activity</span>
+        <button class="c7-filter-btn"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+      </div>
+      <div class="c7-feed-list">
+        <div class="c7-feed-row"><div class="c7-feed-dot c7-feed-dot--file"></div><div class="c7-feed-body"><span class="c7-feed-desc">Created api_endpoints.py</span></div><span class="c7-feed-time">2h ago</span></div>
+        <div class="c7-feed-row"><div class="c7-feed-dot c7-feed-dot--quiz"></div><div class="c7-feed-body"><span class="c7-feed-desc">Completed Database quiz &mdash; 95%</span></div><span class="c7-feed-time">5h ago</span></div>
+        <div class="c7-feed-row"><div class="c7-feed-dot c7-feed-dot--note"></div><div class="c7-feed-body"><span class="c7-feed-desc">Updated SwiftUI_Patterns.md</span></div><span class="c7-feed-time">Yesterday</span></div>
+        <div class="c7-feed-row"><div class="c7-feed-dot c7-feed-dot--habit"></div><div class="c7-feed-body"><span class="c7-feed-desc">Habit streak reached 14 days</span></div><span class="c7-feed-time">Yesterday</span></div>
+        <div class="c7-feed-row"><div class="c7-feed-dot c7-feed-dot--deploy"></div><div class="c7-feed-body"><span class="c7-feed-desc">Deployed backend to Render</span></div><span class="c7-feed-time">2 days ago</span></div>
+      </div>
+      <div class="c7-feed-footer"><button class="c7-btn-ghost">View All Activity</button></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== WIDGETS SECTION ========== -->
+<style>
+  .widgets-section {
+    width: 100%;
+    max-width: 1400px;
+    margin-top: 80px;
+    padding: 0 20px;
+  }
+  .widgets-heading {
+    font-family: var(--font-display);
+    font-size: 38px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+  .widgets-subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+</style>
+
+<div class="widgets-section">
+  <h2 class="widgets-heading">Widgets</h2>
+  <p class="widgets-subtitle">INTERACTIVE FUNCTIONAL WIDGETS &mdash; 9 ITERATIONS</p>
+
+  <div class="masonry-grid">
+
+<style>
+  /* ── W1: Pomodoro Timer Widgets ── */
+  .w1-widget { position: relative; width: 100%; background: var(--card-bg); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); border: 1px solid var(--card-border); border-radius: var(--radius-sm); box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25); padding: 20px; font-family: var(--font-body); color: var(--text-primary); overflow: hidden; box-sizing: border-box; }
+  .w1-widget::before { content: ''; position: absolute; inset: 0; border-radius: var(--radius-sm); background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 55%); pointer-events: none; z-index: 0; }
+  .w1-widget > * { position: relative; z-index: 1; }
+  .w1-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .w1-title { font-family: var(--font-display); font-size: 1.35rem; font-weight: 500; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+  .w1-icon-btn { background: none; border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-secondary); cursor: pointer; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s; padding: 0; flex-shrink: 0; }
+  .w1-icon-btn:hover { background: var(--card-highlight); color: var(--text-primary); }
+  .w1-icon-btn svg { width: 15px; height: 15px; }
+  .w1-ring-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 14px; }
+  .w1-ring-container { position: relative; width: 140px; height: 140px; margin-bottom: 8px; }
+  .w1-ring-svg { width: 140px; height: 140px; transform: rotate(-90deg); }
+  .w1-ring-track { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 6; }
+  .w1-ring-progress { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+  .w1-ring-time { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2rem; font-weight: 600; color: var(--text-primary); }
+  .w1-pills { display: flex; gap: 6px; margin-bottom: 16px; }
+  .w1-pill { flex: 1; padding: 6px 0; text-align: center; border-radius: 12px; font-size: 0.72rem; font-weight: 500; border: 1px solid var(--card-border); background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.2s; }
+  .w1-pill.w1-pill-active { background: var(--accent-soft); border-color: var(--accent); color: var(--text-primary); }
+  .w1-pill:hover:not(.w1-pill-active) { background: var(--card-highlight); color: var(--text-primary); }
+  .w1-btn-primary { width: 100%; padding: 13px; background: var(--accent); border: none; border-radius: 14px; color: var(--text-primary); font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.15s; box-shadow: 0 4px 14px rgba(196,88,42,0.35), inset 0 1px 0 rgba(255,255,255,0.15); margin-bottom: 14px; }
+  .w1-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .w1-btn-ghost { padding: 10px 20px; background: transparent; border: 1px solid var(--card-border); border-radius: 12px; color: var(--text-secondary); font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .w1-btn-ghost:hover { background: var(--card-highlight); color: var(--text-primary); }
+  .w1-btn-skip { padding: 10px 14px; background: transparent; border: none; color: var(--text-tertiary); font-family: var(--font-body); font-size: 0.8rem; cursor: pointer; transition: color 0.2s; }
+  .w1-btn-skip:hover { color: var(--text-secondary); }
+  .w1-bottom-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; color: var(--text-tertiary); }
+  .w1-subtitle { font-size: 0.78rem; color: var(--text-tertiary); }
+  .w1-pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: w1-pulse 1.8s ease-in-out infinite; flex-shrink: 0; }
+  @keyframes w1-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.75); } }
+  .w1-session-label { font-size: 0.8rem; color: var(--text-secondary); }
+  .w1-task-card { background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); border-radius: 12px; padding: 10px 14px; font-size: 0.8rem; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .w1-task-card-label { color: var(--text-tertiary); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .w1-btn-row { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; }
+  .w1-btn-row .w1-btn-ghost { flex: 1; }
+  .w1-progress-segments { display: flex; gap: 5px; align-items: center; }
+  .w1-seg { height: 4px; flex: 1; border-radius: 2px; background: rgba(255,255,255,0.08); transition: background 0.3s; }
+  .w1-seg.w1-seg-filled { background: var(--accent); }
+  .w1-seg.w1-seg-active { background: linear-gradient(90deg, var(--accent), var(--sand)); animation: w1-seg-pulse 1.8s ease-in-out infinite; }
+  @keyframes w1-seg-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+  .w1-break-dot { width: 8px; height: 8px; border-radius: 50%; background: #2dd4a0; flex-shrink: 0; }
+  .w1-stat-card { background: rgba(45, 212, 160, 0.06); border: 1px solid rgba(45, 212, 160, 0.18); border-radius: 12px; padding: 10px 14px; font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .w1-dot-row { display: flex; gap: 6px; align-items: center; }
+  .w1-dot-indicator { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: background 0.3s; }
+  .w1-dot-indicator.w1-dot-filled { background: #2dd4a0; }
+  .w1-ring-progress-break { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s linear; stroke: #2dd4a0; }
+
+  /* ── W2: Calendar, Habits, Tasks Widgets ── */
+  .w2-widget { position: relative; background: var(--card-bg); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); border: 1px solid var(--card-border); border-radius: var(--radius-sm); box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25); padding: 1.25rem 1.375rem 1.375rem; overflow: hidden; width: 100%; box-sizing: border-box; font-family: var(--font-body); }
+  .w2-widget::before { content: ''; position: absolute; inset: 0; border-radius: var(--radius-sm); background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 55%); pointer-events: none; z-index: 0; }
+  .w2-widget > * { position: relative; z-index: 1; }
+  .w2-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .w2-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--text-primary); line-height: 1; }
+  .w2-icon-btn { background: none; border: none; cursor: pointer; color: var(--text-secondary); padding: 0.25rem; border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: color 0.18s, background 0.18s; }
+  .w2-icon-btn:hover { color: var(--text-primary); background: var(--card-highlight); }
+  .w2-cal-nav { display: flex; align-items: center; gap: 0.25rem; }
+  .w2-cal-nav .w2-icon-btn svg { width: 16px; height: 16px; }
+  .w2-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .w2-cal-dow { text-align: center; font-size: 0.65rem; font-weight: 500; color: var(--text-tertiary); letter-spacing: 0.06em; text-transform: uppercase; padding-bottom: 0.375rem; }
+  .w2-cal-day { position: relative; display: flex; flex-direction: column; align-items: center; padding: 0.2rem 0 0.25rem; border-radius: 8px; cursor: pointer; transition: background 0.15s; min-height: 36px; }
+  .w2-cal-day:hover { background: var(--card-highlight); }
+  .w2-cal-day.w2-empty { cursor: default; pointer-events: none; }
+  .w2-cal-day.w2-selected:not(.w2-today) { background: rgba(255,255,255,0.08); }
+  .w2-cal-num { font-size: 0.78rem; color: var(--text-secondary); width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.15s; }
+  .w2-cal-day.w2-today .w2-cal-num { background: var(--accent); color: #fff; font-weight: 600; box-shadow: 0 2px 8px rgba(196,88,42,0.45); }
+  .w2-cal-day.w2-selected:not(.w2-today) .w2-cal-num { outline: 1.5px solid var(--card-border); color: var(--text-primary); }
+  .w2-cal-dots { display: flex; gap: 2px; margin-top: 2px; height: 5px; align-items: center; }
+  .w2-cal-dot { width: 4px; height: 4px; border-radius: 50%; }
+  .w2-dot-accent { background: var(--accent); }
+  .w2-dot-blue { background: #5b9bd5; }
+  .w2-cal-divider { height: 1px; background: var(--card-border); margin: 1rem 0 0.875rem; opacity: 0.6; }
+  .w2-cal-today-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.5rem; }
+  .w2-cal-events { display: flex; flex-direction: column; gap: 0.375rem; }
+  .w2-cal-event { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; }
+  .w2-event-tag { font-size: 0.625rem; font-weight: 600; padding: 0.15rem 0.45rem; border-radius: 4px; flex-shrink: 0; text-transform: uppercase; }
+  .w2-event-tag-accent { background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(196,88,42,0.3); }
+  .w2-event-tag-sand { background: rgba(198,162,122,0.15); color: var(--sand); border: 1px solid rgba(198,162,122,0.3); }
+  .w2-event-time { color: var(--text-tertiary); font-size: 0.72rem; flex-shrink: 0; min-width: 42px; }
+  .w2-event-title { color: var(--text-secondary); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .w2-streak-badge { font-size: 0.75rem; font-weight: 600; color: var(--sand); background: rgba(198,162,122,0.12); border: 1px solid rgba(198,162,122,0.2); border-radius: 20px; padding: 0.15rem 0.5rem; }
+  .w2-hab-meta { display: flex; align-items: center; gap: 0.5rem; }
+  .w2-hab-progress { display: flex; align-items: center; gap: 0.875rem; background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 12px; padding: 0.625rem 0.875rem; margin-bottom: 0.875rem; }
+  .w2-ring-wrap { flex-shrink: 0; width: 44px; height: 44px; }
+  .w2-ring-wrap svg { width: 44px; height: 44px; }
+  .w2-ring-track { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 4; }
+  .w2-ring-fill { fill: none; stroke: #4caf7d; stroke-width: 4; stroke-linecap: round; transform: rotate(-90deg); transform-origin: center; transition: stroke-dashoffset 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .w2-prog-text-wrap { display: flex; flex-direction: column; gap: 1px; }
+  .w2-prog-fraction { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); }
+  .w2-prog-label { font-size: 0.7rem; color: var(--text-tertiary); }
+  .w2-hab-list { display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 0.875rem; }
+  .w2-hab-row { display: flex; align-items: center; gap: 0.625rem; padding: 0.5rem 0.625rem; border-radius: 10px; transition: background 0.15s; cursor: pointer; }
+  .w2-hab-row:hover { background: var(--card-highlight); }
+  .w2-hab-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; background: transparent; }
+  .w2-hab-check.w2-done { background: #4caf7d; border-color: #4caf7d; box-shadow: 0 0 8px rgba(76,175,125,0.4); }
+  .w2-check-icon { display: none; }
+  .w2-done .w2-check-icon { display: block; }
+  .w2-hab-name { flex: 1; font-size: 0.825rem; color: var(--text-secondary); }
+  .w2-hab-row.w2-done-row .w2-hab-name { color: var(--text-primary); font-weight: 500; }
+  .w2-hab-streak { font-size: 0.68rem; font-weight: 600; color: var(--text-tertiary); }
+  .w2-hab-color-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .w2-ghost-btn { width: 100%; background: none; border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-tertiary); font-family: var(--font-body); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.04em; padding: 0.5rem; cursor: pointer; transition: all 0.18s; text-transform: uppercase; }
+  .w2-ghost-btn:hover { color: var(--text-secondary); background: var(--card-highlight); }
+  .w2-tasks-add { width: 26px; height: 26px; border-radius: 8px; background: var(--accent-soft); border: 1px solid rgba(196,88,42,0.35); color: var(--accent); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.18s; flex-shrink: 0; }
+  .w2-tasks-add:hover { background: rgba(196,88,42,0.45); }
+  .w2-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.875rem; overflow-x: auto; padding-bottom: 2px; }
+  .w2-col { display: flex; flex-direction: column; gap: 0.375rem; min-width: 0; }
+  .w2-col-head { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 0.1rem; }
+  .w2-col-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .w2-col-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .w2-col-count { font-size: 0.6rem; color: var(--text-tertiary); background: rgba(255,255,255,0.06); border-radius: 10px; padding: 0.05rem 0.3rem; flex-shrink: 0; }
+  .w2-task-card { background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); border-radius: 10px; padding: 0.5rem; cursor: grab; transition: background 0.15s, transform 0.15s; position: relative; overflow: hidden; }
+  .w2-task-card:hover { background: rgba(255,255,255,0.09); transform: translateY(-1px); }
+  .w2-task-card.w2-in-progress { border-left: 2px solid var(--accent); padding-left: calc(0.5rem - 1px); }
+  .w2-task-top { display: flex; align-items: flex-start; gap: 0.3rem; margin-bottom: 0.3rem; }
+  .w2-priority-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 0.2rem; flex-shrink: 0; }
+  .w2-priority-high { background: #e05c5c; box-shadow: 0 0 4px rgba(224,92,92,0.5); }
+  .w2-priority-medium { background: var(--sand); }
+  .w2-priority-low { background: var(--text-tertiary); }
+  .w2-task-title { font-size: 0.735rem; font-weight: 500; color: var(--text-secondary); line-height: 1.35; flex: 1; word-break: break-word; }
+  .w2-task-card.w2-done-task .w2-task-title { text-decoration: line-through; color: var(--text-tertiary); font-weight: 400; }
+  .w2-task-due { font-size: 0.6rem; color: var(--text-tertiary); }
+  .w2-tasks-footer { display: flex; align-items: center; justify-content: space-between; }
+  .w2-tasks-summary { font-size: 0.7rem; color: var(--text-tertiary); }
+  .w2-tasks-summary span { color: var(--text-secondary); font-weight: 500; }
+
+  /* ── W3: Stats & Analytics Widgets ── */
+  .w3-widget { position: relative; background: var(--card-bg); backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); border: 1px solid var(--card-border); border-radius: var(--radius-sm); box-shadow: var(--card-inset), var(--card-inset-top), 0 16px 32px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.25); overflow: hidden; width: 100%; box-sizing: border-box; font-family: var(--font-body); color: var(--text-primary); }
+  .w3-widget::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.10) 0%, transparent 55%); pointer-events: none; border-radius: var(--radius-sm); z-index: 0; }
+  .w3-widget > * { position: relative; z-index: 1; }
+  .w3-widget-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 0; }
+  .w3-widget-title { font-family: var(--font-display); font-size: 22px; font-weight: 600; color: var(--text-primary); margin: 0; }
+  .w3-icon-btn { width: 30px; height: 30px; border: 1px solid var(--card-border); background: rgba(255,255,255,0.04); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: background 0.2s; flex-shrink: 0; }
+  .w3-icon-btn:hover { background: rgba(255,255,255,0.10); color: var(--text-primary); }
+  .w3-icon-btn svg { width: 14px; height: 14px; }
+  .w3-dashboard { padding-bottom: 18px; }
+  .w3-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 14px 20px 0; }
+  .w3-stat-tile { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .w3-stat-tile-top { display: flex; align-items: center; justify-content: space-between; }
+  .w3-stat-number { font-family: var(--font-display); font-size: 30px; font-weight: 700; line-height: 1; }
+  .w3-stat-number.w3-sand { color: var(--sand); }
+  .w3-stat-number.w3-accent { color: var(--accent); }
+  .w3-stat-number.w3-green { color: #2dd4a0; }
+  .w3-stat-icon { font-size: 14px; opacity: 0.7; }
+  .w3-stat-label { font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.04em; text-transform: uppercase; }
+  .w3-sparkline-section { padding: 16px 20px 0; }
+  .w3-section-label { font-size: 11px; font-weight: 500; color: var(--text-tertiary); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+  .w3-sparkline-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 10px 12px; overflow: hidden; }
+  .w3-sparkline-wrap svg { width: 100%; height: 48px; display: block; overflow: visible; }
+  .w3-status-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 0; }
+  .w3-status-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-tertiary); }
+  .w3-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .w3-dot.w3-green { background: #2dd4a0; box-shadow: 0 0 5px rgba(45,212,160,0.5); }
+  .w3-quiz-perf { padding-bottom: 20px; }
+  .w3-big-stat-wrap { display: flex; flex-direction: column; align-items: center; padding: 16px 20px 12px; gap: 2px; }
+  .w3-big-number { font-family: var(--font-display); font-size: 56px; font-weight: 700; line-height: 1; color: var(--sand); }
+  .w3-big-subtitle { font-size: 12px; color: var(--text-secondary); letter-spacing: 0.06em; text-transform: uppercase; }
+  .w3-bar-list { padding: 0 20px; display: flex; flex-direction: column; gap: 9px; }
+  .w3-bar-row { display: grid; grid-template-columns: 120px 1fr 36px; align-items: center; gap: 8px; }
+  .w3-bar-name { font-size: 11px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
+  .w3-bar-track { height: 6px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+  .w3-bar-fill { height: 100%; border-radius: 99px; width: 0; transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+  .w3-bar-fill.w3-bar-green { background: #2dd4a0; box-shadow: 0 0 6px rgba(45,212,160,0.45); }
+  .w3-bar-fill.w3-bar-sand { background: var(--sand); box-shadow: 0 0 6px rgba(198,162,122,0.45); }
+  .w3-bar-fill.w3-bar-accent { background: var(--accent); box-shadow: 0 0 6px rgba(196,88,42,0.45); }
+  .w3-bar-pct { font-size: 11px; color: var(--text-tertiary); text-align: right; font-variant-numeric: tabular-nums; }
+  .w3-quiz-footer { display: flex; align-items: center; gap: 10px; padding: 14px 20px 0; }
+  .w3-btn-accent { flex: 1; background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 9px 14px; font-family: var(--font-body); font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+  .w3-btn-accent:hover { opacity: 0.85; }
+  .w3-ghost-pill { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: 99px; padding: 6px 12px; font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
+  .w3-heatmap-widget { padding-bottom: 20px; }
+  .w3-heatmap-header-row { display: flex; align-items: center; gap: 10px; }
+  .w3-month-pill { background: rgba(255,255,255,0.06); border: 1px solid var(--card-border); border-radius: 99px; padding: 4px 10px; font-size: 11px; color: var(--text-secondary); }
+  .w3-heatmap-section { padding: 14px 20px 0; }
+  .w3-day-headers { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+  .w3-day-hdr { text-align: center; font-size: 10px; color: var(--text-tertiary); font-weight: 500; }
+  .w3-heat-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .w3-heat-cell { aspect-ratio: 1; border-radius: 5px; cursor: default; position: relative; }
+  .w3-heat-0 { background: rgba(196,88,42,0.03); border: 1px solid rgba(255,255,255,0.05); }
+  .w3-heat-1 { background: rgba(196,88,42,0.15); }
+  .w3-heat-2 { background: rgba(196,88,42,0.35); }
+  .w3-heat-3 { background: rgba(196,88,42,0.60); box-shadow: 0 0 5px rgba(196,88,42,0.3); }
+  .w3-heat-cell::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: rgba(20,18,16,0.95); border: 1px solid var(--card-border); border-radius: 7px; padding: 4px 8px; font-size: 10px; color: var(--text-primary); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 10; backdrop-filter: blur(8px); }
+  .w3-heat-cell:hover::after { opacity: 1; }
+  .w3-heat-legend { display: flex; align-items: center; gap: 5px; padding: 10px 20px 0; }
+  .w3-legend-label { font-size: 10px; color: var(--text-tertiary); }
+  .w3-legend-swatch { width: 12px; height: 12px; border-radius: 3px; }
+  .w3-legend-spacer { flex: 1; }
+  .w3-activity-rows { padding: 12px 20px 0; display: flex; flex-direction: column; gap: 6px; }
+  .w3-activity-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+  .w3-activity-icon { font-size: 13px; width: 20px; text-align: center; flex-shrink: 0; }
+  .w3-activity-count { font-variant-numeric: tabular-nums; font-weight: 500; color: var(--text-primary); }
+  .w3-total-pill-wrap { padding: 12px 20px 0; }
+  .w3-total-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--accent-soft); border: 1px solid rgba(196,88,42,0.25); border-radius: 99px; padding: 6px 14px; font-size: 12px; color: var(--sand); font-weight: 500; }
+  .w3-total-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+</style>
+
+    <!-- ══ Widget 1: Pomodoro Idle ══ -->
+    <div class="w1-widget" id="w1-widget1">
+      <div class="w1-header"><span class="w1-title">Focus Timer</span><button class="w1-icon-btn" title="Settings" onclick="w1_openSettings()"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M3.05 12.95l1.06-1.06M11.89 4.11l1.06-1.06"/></svg></button></div>
+      <div class="w1-ring-wrap"><div class="w1-ring-container"><svg class="w1-ring-svg" viewBox="0 0 140 140"><defs><linearGradient id="w1-grad-idle" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#C4582A"/><stop offset="100%" stop-color="#c6a27a"/></linearGradient></defs><circle class="w1-ring-track" cx="70" cy="70" r="62"/><circle class="w1-ring-progress" id="w1-ring1" cx="70" cy="70" r="62" stroke="url(#w1-grad-idle)" stroke-dasharray="389.557" stroke-dashoffset="0"/></svg><div class="w1-ring-time" id="w1-time1">25:00</div></div><span class="w1-subtitle">Ready to focus</span></div>
+      <div class="w1-pills"><button class="w1-pill w1-pill-active" onclick="w1_selectMode(1,'focus')">Focus</button><button class="w1-pill" onclick="w1_selectMode(1,'short')">Short Break</button><button class="w1-pill" onclick="w1_selectMode(1,'long')">Long Break</button></div>
+      <button class="w1-btn-primary" id="w1-start-btn" onclick="w1_startTimer()">Start</button>
+      <div class="w1-bottom-row"><span id="w1-session-count">&#127813; 0/4 sessions</span><span id="w1-end-time">~<span id="w1-end-time-val"></span></span></div>
+    </div>
+
+    <!-- ══ Widget 4: Calendar ══ -->
+    <div class="w2-widget" id="w2-calendar">
+      <div class="w2-header"><div class="w2-cal-nav"><button class="w2-icon-btn" id="w2-cal-prev" aria-label="Previous month"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 4 6 8 10 12"/></svg></button><span class="w2-title" id="w2-cal-month-label">March 2026</span><button class="w2-icon-btn" id="w2-cal-next" aria-label="Next month"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 4 10 8 6 12"/></svg></button></div></div>
+      <div class="w2-cal-grid" id="w2-cal-grid"><div class="w2-cal-dow">S</div><div class="w2-cal-dow">M</div><div class="w2-cal-dow">T</div><div class="w2-cal-dow">W</div><div class="w2-cal-dow">T</div><div class="w2-cal-dow">F</div><div class="w2-cal-dow">S</div></div>
+      <div class="w2-cal-divider"></div>
+      <div class="w2-cal-today-label">Today &middot; March 24</div>
+      <div class="w2-cal-events"><div class="w2-cal-event"><span class="w2-event-tag w2-event-tag-accent">Quiz</span><span class="w2-event-time">2:00 PM</span><span class="w2-event-title">Database quiz review</span></div><div class="w2-cal-event"><span class="w2-event-tag w2-event-tag-sand">Dev</span><span class="w2-event-time">5:00 PM</span><span class="w2-event-title">Push backend changes</span></div></div>
+    </div>
+
+    <!-- ══ Widget 7: Overview Dashboard ══ -->
+    <div class="w3-widget w3-dashboard">
+      <div class="w3-widget-header"><h2 class="w3-widget-title">Dashboard</h2><button class="w3-icon-btn w3-refresh-btn" aria-label="Refresh"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 8A5.5 5.5 0 1 1 10 3.1"/><path d="M10 1v2.5H12.5"/></svg></button></div>
+      <div class="w3-stat-grid"><div class="w3-stat-tile"><div class="w3-stat-tile-top"><span class="w3-stat-number w3-sand">12</span><span class="w3-stat-icon" style="color:var(--sand)"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10l3-3 2 2 4-5"/><path d="M9 4h2v2"/></svg></span></div><span class="w3-stat-label">Files</span></div><div class="w3-stat-tile"><div class="w3-stat-tile-top"><span class="w3-stat-number w3-accent">8</span><span class="w3-stat-icon" style="color:var(--accent)"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="1.5" width="9" height="10" rx="1.5"/><path d="M4.5 4.5h4M4.5 6.5h4M4.5 8.5h2.5"/></svg></span></div><span class="w3-stat-label">Notes</span></div><div class="w3-stat-tile"><div class="w3-stat-tile-top"><span class="w3-stat-number w3-green">14</span><span class="w3-stat-icon" style="font-size:15px;">&#128293;</span></div><span class="w3-stat-label">Day Streak</span></div><div class="w3-stat-tile"><div class="w3-stat-tile-top"><span class="w3-stat-number w3-sand">92%</span><span class="w3-stat-icon" style="color:var(--sand)"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 1l1.4 3 3.3.4-2.4 2.3.6 3.3L6.5 8.4 3.6 10l.6-3.3L1.8 4.4l3.3-.4z"/></svg></span></div><span class="w3-stat-label">Avg Score</span></div></div>
+      <div class="w3-sparkline-section"><div class="w3-section-label">This Week</div><div class="w3-sparkline-wrap"><svg id="w3-sparkline" viewBox="0 0 280 48" preserveAspectRatio="none"><defs><linearGradient id="w3SparkGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#C4582A"/><stop offset="100%" stop-color="#c6a27a"/></linearGradient><linearGradient id="w3SparkFill" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#C4582A" stop-opacity="0.25"/><stop offset="100%" stop-color="#C4582A" stop-opacity="0.0"/></linearGradient></defs><polygon id="w3-spark-area" fill="url(#w3SparkFill)"/><polyline id="w3-spark-line" fill="none" stroke="url(#w3SparkGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><g id="w3-spark-dots"></g></svg></div></div>
+      <div class="w3-status-bar"><div class="w3-status-item"><span class="w3-dot w3-green"></span>Last sync: 2 min ago</div><div class="w3-status-item"><span class="w3-dot w3-green"></span>Server: Healthy</div></div>
+    </div>
+
+    <!-- ══ Widget 2: Pomodoro Active ══ -->
+    <div class="w1-widget" id="w1-widget2">
+      <div class="w1-header"><span class="w1-title"><span class="w1-pulse-dot"></span>Focusing...</span><button class="w1-icon-btn" title="Minimize"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 8h10"/></svg></button></div>
+      <div class="w1-ring-wrap"><div class="w1-ring-container"><svg class="w1-ring-svg" viewBox="0 0 140 140"><defs><linearGradient id="w1-grad-active" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#C4582A"/><stop offset="100%" stop-color="#c6a27a"/></linearGradient></defs><circle class="w1-ring-track" cx="70" cy="70" r="62"/><circle class="w1-ring-progress" id="w1-ring2" cx="70" cy="70" r="62" stroke="url(#w1-grad-active)" stroke-dasharray="389.557" stroke-dashoffset="107.9"/></svg><div class="w1-ring-time" id="w1-time2">17:32</div></div><span class="w1-session-label" id="w1-session-label2">Session 2 of 4</span></div>
+      <div class="w1-task-card"><span>&#128214;</span><div><div class="w1-task-card-label">Currently studying</div><div>Database Fundamentals</div></div></div>
+      <div class="w1-btn-row"><button class="w1-btn-ghost" id="w1-pause-btn" onclick="w1_togglePause()">Pause</button><button class="w1-btn-skip" onclick="w1_skipSession()">Skip &rarr;</button></div>
+      <div class="w1-progress-segments" id="w1-segs"><div class="w1-seg w1-seg-filled"></div><div class="w1-seg w1-seg-active"></div><div class="w1-seg"></div><div class="w1-seg"></div></div>
+    </div>
+
+    <!-- ══ Widget 5: Habits Checklist ══ -->
+    <div class="w2-widget" id="w2-habits">
+      <div class="w2-header"><span class="w2-title">Today's Habits</span><div class="w2-hab-meta"><span class="w2-streak-badge">&#128293; 14</span></div></div>
+      <div class="w2-hab-progress"><div class="w2-ring-wrap"><svg viewBox="0 0 44 44"><circle class="w2-ring-track" cx="22" cy="22" r="18"/><circle class="w2-ring-fill" id="w2-ring-fill" cx="22" cy="22" r="18" stroke-dasharray="113.1" stroke-dashoffset="28.3"/></svg></div><div class="w2-prog-text-wrap"><span class="w2-prog-fraction" id="w2-prog-fraction">3 of 4</span><span class="w2-prog-label">habits complete</span></div></div>
+      <div class="w2-hab-list">
+        <div class="w2-hab-row w2-done-row" data-hab-id="1" data-done="true"><div class="w2-hab-check w2-done"><svg class="w2-check-icon" width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1 4.5 4 7.5 10 1.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="w2-hab-name">Study 30min</span><span class="w2-hab-streak">14d</span><span class="w2-hab-color-dot" style="background:#5b9bd5;"></span></div>
+        <div class="w2-hab-row w2-done-row" data-hab-id="2" data-done="true"><div class="w2-hab-check w2-done"><svg class="w2-check-icon" width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1 4.5 4 7.5 10 1.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="w2-hab-name">Review Flashcards</span><span class="w2-hab-streak">12d</span><span class="w2-hab-color-dot" style="background:#9b7dd4;"></span></div>
+        <div class="w2-hab-row w2-done-row" data-hab-id="3" data-done="true"><div class="w2-hab-check w2-done"><svg class="w2-check-icon" width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1 4.5 4 7.5 10 1.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="w2-hab-name">Practice Swift</span><span class="w2-hab-streak">8d</span><span class="w2-hab-color-dot" style="background:#4caf7d;"></span></div>
+        <div class="w2-hab-row" data-hab-id="4" data-done="false"><div class="w2-hab-check"><svg class="w2-check-icon" width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1 4.5 4 7.5 10 1.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="w2-hab-name">Push to GitHub</span><span class="w2-hab-streak">5d</span><span class="w2-hab-color-dot" style="background:var(--accent);"></span></div>
+      </div>
+      <button class="w2-ghost-btn">View History</button>
+    </div>
+
+    <!-- ══ Widget 8: Quiz Performance ══ -->
+    <div class="w3-widget w3-quiz-perf">
+      <div class="w3-widget-header"><h2 class="w3-widget-title">Quiz Scores</h2><button class="w3-icon-btn" aria-label="Filter"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h12M5 8h6M7 12h2"/></svg></button></div>
+      <div class="w3-big-stat-wrap"><span class="w3-big-number">92%</span><span class="w3-big-subtitle">Average Score</span></div>
+      <div class="w3-bar-list">
+        <div class="w3-bar-row"><span class="w3-bar-name">REST Design</span><div class="w3-bar-track"><div class="w3-bar-fill w3-bar-green" data-pct="96" style="transition-delay:0.05s"></div></div><span class="w3-bar-pct">96%</span></div>
+        <div class="w3-bar-row"><span class="w3-bar-name">Database Fundamentals</span><div class="w3-bar-track"><div class="w3-bar-fill w3-bar-green" data-pct="95" style="transition-delay:0.10s"></div></div><span class="w3-bar-pct">95%</span></div>
+        <div class="w3-bar-row"><span class="w3-bar-name">Auth Systems</span><div class="w3-bar-track"><div class="w3-bar-fill w3-bar-green" data-pct="92" style="transition-delay:0.15s"></div></div><span class="w3-bar-pct">92%</span></div>
+        <div class="w3-bar-row"><span class="w3-bar-name">Python Patterns</span><div class="w3-bar-track"><div class="w3-bar-fill w3-bar-green" data-pct="90" style="transition-delay:0.20s"></div></div><span class="w3-bar-pct">90%</span></div>
+        <div class="w3-bar-row"><span class="w3-bar-name">Swift Concurrency</span><div class="w3-bar-track"><div class="w3-bar-fill w3-bar-sand" data-pct="88" style="transition-delay:0.25s"></div></div><span class="w3-bar-pct">88%</span></div>
+        <div class="w3-bar-row"><span class="w3-bar-name">Git Workflows</span><div class="w3-bar-track"><div class="w3-bar-fill w3-bar-sand" data-pct="88" style="transition-delay:0.30s"></div></div><span class="w3-bar-pct">88%</span></div>
+        <div class="w3-bar-row"><span class="w3-bar-name">SQL Joins</span><div class="w3-bar-track"><div class="w3-bar-fill w3-bar-sand" data-pct="85" style="transition-delay:0.35s"></div></div><span class="w3-bar-pct">85%</span></div>
+        <div class="w3-bar-row"><span class="w3-bar-name">FastAPI Security</span><div class="w3-bar-track"><div class="w3-bar-fill w3-bar-accent" data-pct="78" style="transition-delay:0.40s"></div></div><span class="w3-bar-pct">78%</span></div>
+      </div>
+      <div class="w3-quiz-footer"><button class="w3-btn-accent">Start New Quiz</button><span class="w3-ghost-pill">8 completed</span></div>
+    </div>
+
+    <!-- ══ Widget 3: Pomodoro Break ══ -->
+    <div class="w1-widget" id="w1-widget3">
+      <div class="w1-header"><span class="w1-title"><span class="w1-break-dot"></span>Break Time</span><div style="width:32px;"></div></div>
+      <div class="w1-ring-wrap"><div class="w1-ring-container"><svg class="w1-ring-svg" viewBox="0 0 140 140"><defs><linearGradient id="w1-grad-break" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2dd4a0"/><stop offset="100%" stop-color="#5ee8c2"/></linearGradient></defs><circle class="w1-ring-track" cx="70" cy="70" r="62"/><circle class="w1-ring-progress-break" id="w1-ring3" cx="70" cy="70" r="62" stroke="url(#w1-grad-break)" stroke-dasharray="389.557" stroke-dashoffset="0"/></svg><div class="w1-ring-time" id="w1-time3">5:00</div></div><span class="w1-subtitle">Take a breather</span></div>
+      <div class="w1-stat-card"><span>&#128293;</span><span>You've focused <strong>50 min</strong> today</span></div>
+      <button class="w1-btn-ghost" style="width:100%;margin-bottom:16px;" onclick="w1_skipBreak()">Skip Break</button>
+      <div class="w1-bottom-row"><span style="color:var(--text-tertiary);font-size:0.75rem;">2/4 complete</span><div class="w1-dot-row"><div class="w1-dot-indicator w1-dot-filled"></div><div class="w1-dot-indicator w1-dot-filled"></div><div class="w1-dot-indicator"></div><div class="w1-dot-indicator"></div></div></div>
+    </div>
+
+    <!-- ══ Widget 6: Tasks Board ══ -->
+    <div class="w2-widget" id="w2-tasks">
+      <div class="w2-header"><span class="w2-title">Tasks</span><button class="w2-tasks-add" aria-label="Add task">+</button></div>
+      <div class="w2-board">
+        <div class="w2-col"><div class="w2-col-head"><span class="w2-col-dot" style="background:var(--text-tertiary);"></span><span class="w2-col-label">To Do</span><span class="w2-col-count">2</span></div><div class="w2-task-card"><div class="w2-task-top"><span class="w2-priority-dot w2-priority-high"></span><span class="w2-task-title">Write API tests</span></div><div class="w2-task-due">Mar 26</div></div><div class="w2-task-card"><div class="w2-task-top"><span class="w2-priority-dot w2-priority-low"></span><span class="w2-task-title">Update README</span></div><div class="w2-task-due">Mar 28</div></div></div>
+        <div class="w2-col"><div class="w2-col-head"><span class="w2-col-dot" style="background:var(--accent);"></span><span class="w2-col-label">In Progress</span><span class="w2-col-count">1</span></div><div class="w2-task-card w2-in-progress"><div class="w2-task-top"><span class="w2-priority-dot w2-priority-high"></span><span class="w2-task-title">Quiz scoring algorithm</span></div><div class="w2-task-due">Mar 25</div></div></div>
+        <div class="w2-col"><div class="w2-col-head"><span class="w2-col-dot" style="background:#4caf7d;"></span><span class="w2-col-label">Done</span><span class="w2-col-count">2</span></div><div class="w2-task-card w2-done-task"><div class="w2-task-top"><span class="w2-priority-dot w2-priority-medium"></span><span class="w2-task-title">Auth middleware refactor</span></div><div class="w2-task-due">Mar 22</div></div><div class="w2-task-card w2-done-task"><div class="w2-task-top"><span class="w2-priority-dot w2-priority-medium"></span><span class="w2-task-title">Database migration</span></div><div class="w2-task-due">Mar 21</div></div></div>
+      </div>
+      <div class="w2-tasks-footer"><span class="w2-tasks-summary"><span>5 tasks</span> &middot; 2 complete</span></div>
+    </div>
+
+    <!-- ══ Widget 9: Activity Heatmap ══ -->
+    <div class="w3-widget w3-heatmap-widget">
+      <div class="w3-widget-header"><div class="w3-heatmap-header-row"><h2 class="w3-widget-title">Activity</h2><span class="w3-month-pill">This Month</span></div></div>
+      <div class="w3-heatmap-section"><div class="w3-day-headers"><span class="w3-day-hdr">S</span><span class="w3-day-hdr">M</span><span class="w3-day-hdr">T</span><span class="w3-day-hdr">W</span><span class="w3-day-hdr">T</span><span class="w3-day-hdr">F</span><span class="w3-day-hdr">S</span></div><div class="w3-heat-grid" id="w3-heat-grid"></div></div>
+      <div class="w3-heat-legend"><span class="w3-legend-label">Less</span><div class="w3-legend-swatch w3-heat-0"></div><div class="w3-legend-swatch w3-heat-1"></div><div class="w3-legend-swatch w3-heat-2"></div><div class="w3-legend-swatch w3-heat-3"></div><span class="w3-legend-label">More</span></div>
+      <div class="w3-activity-rows"><div class="w3-activity-row"><span class="w3-activity-icon">&#128221;</span><span><span class="w3-activity-count">23</span> file edits</span></div><div class="w3-activity-row"><span class="w3-activity-icon">&#128211;</span><span><span class="w3-activity-count">15</span> note updates</span></div><div class="w3-activity-row"><span class="w3-activity-icon">&#9989;</span><span><span class="w3-activity-count">42</span> habits completed</span></div></div>
+      <div class="w3-total-pill-wrap"><span class="w3-total-pill">80 actions this month</span></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Chart bars for View 1
+  const chart = document.getElementById('chart1');
+  const days = ['M','T','W','T','F','S','S'];
+  const heights = [45, 70, 30, 85, 60, 40, 55];
+  const types = ['rose','sand','muted','rose','sand','muted','rose'];
+
+  days.forEach((day, i) => {
+    const col = document.createElement('div');
+    col.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;';
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar ' + types[i];
+    bar.style.height = '0px';
+    bar.style.width = '100%';
+    const label = document.createElement('span');
+    label.style.cssText = 'font-size:10px;color:var(--text-tertiary);';
+    label.textContent = day;
+    col.appendChild(bar);
+    col.appendChild(label);
+    chart.appendChild(col);
+    setTimeout(() => { bar.style.height = heights[i] + 'px'; }, 300 + i * 100);
+  });
+
+  // Quantity controls for order card
+  document.querySelectorAll('.c1-qty').forEach(function (group) {
+    var valEl  = group.querySelector('.c1-qty-val');
+    group.querySelector('.c1-qty-minus').addEventListener('click', function () {
+      var v = parseInt(valEl.textContent, 10);
+      if (v > 1) valEl.textContent = v - 1;
+    });
+    group.querySelector('.c1-qty-plus').addEventListener('click', function () {
+      valEl.textContent = parseInt(valEl.textContent, 10) + 1;
+    });
+  });
+</script>
+
+<!-- Widget Scripts -->
+<script>
+  // ── W1: Pomodoro Timer ──
+  const W1_CIRCUMFERENCE = 2 * Math.PI * 62;
+  const w1State = { mode:'focus', durations:{focus:25*60,short:5*60,long:15*60}, sessionsDone:0, totalSessions:4, w2SecondsLeft:17*60+32, w2TotalSeconds:25*60, w2Session:2, w2Paused:false, w2Interval:null, w3SecondsLeft:5*60, w3TotalSeconds:5*60, w3Interval:null };
+  function w1_fmt(s){const m=Math.floor(s/60);return `${m}:${(s%60).toString().padStart(2,'0')}`;}
+  function w1_setRingOffset(id,left,total){const el=document.getElementById(id);if(el)el.style.strokeDashoffset=W1_CIRCUMFERENCE*(1-left/total);}
+  function w1_calcEndTime(s){const n=new Date();n.setSeconds(n.getSeconds()+s);let h=n.getHours();const m=n.getMinutes().toString().padStart(2,'0');const ap=h>=12?'PM':'AM';h=h%12||12;return `${h}:${m} ${ap}`;}
+  function w1_init1(){const d=w1State.durations[w1State.mode];document.getElementById('w1-time1').textContent=w1_fmt(d);document.getElementById('w1-ring1').style.strokeDashoffset='0';const e=document.getElementById('w1-end-time-val');if(e)e.textContent=w1_calcEndTime(d);document.getElementById('w1-session-count').textContent=`🍅 ${w1State.sessionsDone}/${w1State.totalSessions} sessions`;}
+  function w1_selectMode(w,mode){w1State.mode=mode;const pills=document.querySelectorAll('#w1-widget1 .w1-pill');pills.forEach(p=>p.classList.remove('w1-pill-active'));const idx={focus:0,short:1,long:2}[mode];if(pills[idx])pills[idx].classList.add('w1-pill-active');w1_init1();}
+  function w1_openSettings(){}
+  function w1_startTimer(){const d=w1State.durations[w1State.mode];w1State.w2TotalSeconds=d;w1State.w2SecondsLeft=d;w1State.w2Paused=false;w1State.w2Session=w1State.sessionsDone+1;if(w1State.w2Interval)clearInterval(w1State.w2Interval);w1_renderW2();document.getElementById('w1-start-btn').textContent='Running ↓';document.getElementById('w1-start-btn').disabled=true;document.getElementById('w1-start-btn').style.opacity='0.5';w1State.w2Interval=setInterval(w1_tickW2,1000);}
+  function w1_renderW2(){document.getElementById('w1-time2').textContent=w1_fmt(w1State.w2SecondsLeft);document.getElementById('w1-session-label2').textContent=`Session ${w1State.w2Session} of ${w1State.totalSessions}`;w1_setRingOffset('w1-ring2',w1State.w2SecondsLeft,w1State.w2TotalSeconds);document.getElementById('w1-pause-btn').textContent=w1State.w2Paused?'Resume':'Pause';w1_renderSegs(w1State.w2Session-1,w1State.w2Paused?'paused':'active');}
+  function w1_tickW2(){if(w1State.w2Paused)return;if(w1State.w2SecondsLeft<=0){clearInterval(w1State.w2Interval);w1State.w2Interval=null;w1State.sessionsDone=Math.min(w1State.w2Session,w1State.totalSessions);w1_init1();w1_startBreak();return;}w1State.w2SecondsLeft--;w1_renderW2();}
+  function w1_togglePause(){w1State.w2Paused=!w1State.w2Paused;w1_renderW2();}
+  function w1_skipSession(){if(w1State.w2Interval)clearInterval(w1State.w2Interval);w1State.w2Interval=null;w1State.sessionsDone=Math.min(w1State.w2Session,w1State.totalSessions);document.getElementById('w1-start-btn').textContent='Start';document.getElementById('w1-start-btn').disabled=false;document.getElementById('w1-start-btn').style.opacity='1';w1_init1();w1_startBreak();}
+  function w1_renderSegs(filled,mode){document.querySelectorAll('#w1-segs .w1-seg').forEach((s,i)=>{s.className='w1-seg';if(i<filled)s.classList.add('w1-seg-filled');else if(i===filled&&mode!=='paused')s.classList.add('w1-seg-active');});}
+  function w1_startBreak(){w1State.w3SecondsLeft=5*60;w1State.w3TotalSeconds=5*60;if(w1State.w3Interval)clearInterval(w1State.w3Interval);w1_renderW3();w1State.w3Interval=setInterval(w1_tickW3,1000);}
+  function w1_renderW3(){document.getElementById('w1-time3').textContent=w1_fmt(w1State.w3SecondsLeft);w1_setRingOffset('w1-ring3',w1State.w3SecondsLeft,w1State.w3TotalSeconds);document.querySelectorAll('#w1-widget3 .w1-dot-indicator').forEach((d,i)=>{d.className='w1-dot-indicator';if(i<w1State.sessionsDone)d.classList.add('w1-dot-filled');});const c=document.querySelector('#w1-widget3 .w1-bottom-row span');if(c)c.textContent=`${w1State.sessionsDone}/4 complete`;}
+  function w1_tickW3(){if(w1State.w3SecondsLeft<=0){clearInterval(w1State.w3Interval);w1State.w3Interval=null;return;}w1State.w3SecondsLeft--;w1_renderW3();}
+  function w1_skipBreak(){if(w1State.w3Interval)clearInterval(w1State.w3Interval);w1State.w3Interval=null;w1State.w3SecondsLeft=w1State.w3TotalSeconds;w1_renderW3();}
+  (function(){w1_init1();w1_setRingOffset('w1-ring2',17*60+32,25*60);w1_setRingOffset('w1-ring3',5*60,5*60);})();
+
+  // ── W2: Calendar ──
+  (function(){const actDots={15:['blue'],18:['blue'],20:['accent'],21:['accent'],22:['accent'],23:['accent']};let vY=2026,vM=2,selDay=null;const TODAY={year:2026,month:2,day:24};const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];function render(){const g=document.getElementById('w2-cal-grid'),l=document.getElementById('w2-cal-month-label');l.textContent=`${MN[vM]} ${vY}`;g.querySelectorAll('.w2-cal-day').forEach(e=>e.remove());const fd=new Date(vY,vM,1).getDay(),dim=new Date(vY,vM+1,0).getDate(),isCur=vY===TODAY.year&&vM===TODAY.month;for(let i=0;i<fd;i++){const e=document.createElement('div');e.className='w2-cal-day w2-empty';g.appendChild(e);}for(let d=1;d<=dim;d++){const c=document.createElement('div');c.className='w2-cal-day';if(isCur&&d===TODAY.day)c.classList.add('w2-today');if(isCur&&d===selDay&&d!==TODAY.day)c.classList.add('w2-selected');const n=document.createElement('div');n.className='w2-cal-num';n.textContent=d;c.appendChild(n);if(isCur&&actDots[d]){const dr=document.createElement('div');dr.className='w2-cal-dots';actDots[d].forEach(t=>{const dt=document.createElement('span');dt.className=`w2-cal-dot w2-dot-${t}`;dr.appendChild(dt);});c.appendChild(dr);}c.addEventListener('click',()=>{selDay=(selDay===d&&isCur)?null:d;render();});g.appendChild(c);}}document.getElementById('w2-cal-prev').addEventListener('click',()=>{vM--;if(vM<0){vM=11;vY--;}selDay=null;render();});document.getElementById('w2-cal-next').addEventListener('click',()=>{vM++;if(vM>11){vM=0;vY++;}selDay=null;render();});render();})();
+
+  // ── W2: Habits ──
+  (function(){const C=2*Math.PI*18;function cnt(){return document.querySelectorAll('#w2-habits .w2-hab-row[data-done="true"]').length;}function upd(){const t=document.querySelectorAll('#w2-habits .w2-hab-row').length,d=cnt();document.getElementById('w2-ring-fill').style.strokeDashoffset=(C*(1-d/t)).toFixed(2);document.getElementById('w2-prog-fraction').textContent=`${d} of ${t}`;}document.querySelectorAll('#w2-habits .w2-hab-row').forEach(r=>{r.addEventListener('click',()=>{const done=r.dataset.done==='true';r.dataset.done=done?'false':'true';const ch=r.querySelector('.w2-hab-check');if(!done){ch.classList.add('w2-done');r.classList.add('w2-done-row');}else{ch.classList.remove('w2-done');r.classList.remove('w2-done-row');}upd();});});upd();})();
+
+  // ── W3: Sparkline ──
+  (function(){const vals=[3,5,2,7,4,6,1],W=280,H=48,P=6,mx=Math.max(...vals),mn=Math.min(...vals),rng=mx-mn||1;function sx(i){return P+(i/(vals.length-1))*(W-P*2);}function sy(v){return H-P-((v-mn)/rng)*(H-P*2);}const pts=vals.map((v,i)=>`${sx(i)},${sy(v)}`).join(' ');const area=`${sx(0)},${H} `+vals.map((v,i)=>`${sx(i)},${sy(v)}`).join(' ')+` ${sx(vals.length-1)},${H}`;const l=document.getElementById('w3-spark-line'),a=document.getElementById('w3-spark-area'),d=document.getElementById('w3-spark-dots');if(l)l.setAttribute('points',pts);if(a)a.setAttribute('points',area);if(d)vals.forEach((v,i)=>{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',sx(i));c.setAttribute('cy',sy(v));c.setAttribute('r','2.5');c.setAttribute('fill',i===3?'#2dd4a0':'#c6a27a');c.setAttribute('stroke','rgba(0,0,0,0.3)');c.setAttribute('stroke-width','1');d.appendChild(c);});const rb=document.querySelector('.w3-refresh-btn');if(rb)rb.addEventListener('click',function(){const s=this.querySelector('svg');if(!s)return;s.style.transition='transform 0.5s ease';s.style.transform='rotate(360deg)';setTimeout(()=>{s.style.transition='none';s.style.transform='rotate(0deg)';},520);});})();
+
+  // ── W3: Quiz bar animation ──
+  (function(){function anim(){document.querySelectorAll('.w3-bar-fill').forEach(el=>{const p=el.getAttribute('data-pct');if(p)requestAnimationFrame(()=>{el.style.width=p+'%';});});}if('IntersectionObserver' in window){const obs=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){anim();obs.disconnect();}});},{threshold:0.2});const w=document.querySelector('.w3-quiz-perf');if(w)obs.observe(w);}else anim();})();
+
+  // ── W3: Heatmap ──
+  (function(){const data=[{d:'Mar 1',c:1},{d:'Mar 2',c:4},{d:'Mar 3',c:5},{d:'Mar 4',c:3},{d:'Mar 5',c:6},{d:'Mar 6',c:4},{d:'Mar 7',c:2},{d:'Mar 8',c:0},{d:'Mar 9',c:5},{d:'Mar 10',c:3},{d:'Mar 11',c:6},{d:'Mar 12',c:4},{d:'Mar 13',c:5},{d:'Mar 14',c:1},{d:'Mar 15',c:2},{d:'Mar 16',c:4},{d:'Mar 17',c:5},{d:'Mar 18',c:2},{d:'Mar 19',c:6},{d:'Mar 20',c:5},{d:'Mar 21',c:3},{d:'Mar 22',c:1},{d:'Mar 23',c:3},{d:'Mar 24',c:4},{d:'Mar 25',c:0},{d:'Mar 26',c:2},{d:'Mar 27',c:3},{d:'Mar 28',c:0}];function lv(c){if(c===0)return 0;if(c<=2)return 1;if(c<=4)return 2;return 3;}const g=document.getElementById('w3-heat-grid');if(g)data.forEach(i=>{const c=document.createElement('div');c.className='w3-heat-cell w3-heat-'+lv(i.c);c.setAttribute('data-tip',`${i.d}: ${i.c} action${i.c!==1?'s':''}`);g.appendChild(c);});})();
+</script>
+
+</body>
+</html>
